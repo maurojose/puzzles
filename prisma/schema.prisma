@@ -1,0 +1,27 @@
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+  generator client {
+    provider = "prisma-client-js"
+  }
+
+  datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+  }
+
+  model jogostatus {
+    id          String   @id @map("_id")
+    url         String
+    rodada      String
+    userid      String
+  }
+
+  model estoque {
+    id          String   @id @map("_id")
+    qtd         String
+    rodada      String
+    userid      String
+    valor       String
+    data        DateTime @default(now())
+  }
