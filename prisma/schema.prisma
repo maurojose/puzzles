@@ -25,3 +25,26 @@
     valor       String
     data        DateTime @default(now())
   }
+
+    model gabarito {
+    id          String   @id @map("_id")
+    rodada      String
+    url         String
+  }
+
+    model jogos {
+    id            String   @id @map("_id")
+    premio        String
+    datacomeco    DateTime
+    datafim       DateTime
+    ganhador      String
+    participantes String
+    arrecadacao   String
+  }
+
+      model users {
+    id            String   @id @map("_id")
+    Nome          String
+    Saldo         String
+    
+  }
