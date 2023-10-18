@@ -42,9 +42,10 @@
     arrecadacao   String
   }
 
-      model users {
-    id            String   @id @map("_id")
-    Nome          String
-    Saldo         String
+    model users {
+    id            String @id @default(auto()) @map("_id") @db.ObjectId
+    nome          String
+    saldo         String
+    date          DateTime @default(now())
     
   }
