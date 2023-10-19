@@ -22,7 +22,7 @@
     qtd         String
     rodada      String
     userid      String
-    valor       String
+    url         String
     data        DateTime @default(now())
   }
 
@@ -33,13 +33,14 @@
   }
 
     model jogos {
-    id            String   @id @map("_id")
+    id            String @id @default(auto()) @map("_id") @db.ObjectId
     premio        String
-    datacomeco    DateTime
+    datacomeco    DateTime @default(now())
     datafim       DateTime
     ganhador      String
     participantes String
     arrecadacao   String
+    preco         String
   }
 
     model users {

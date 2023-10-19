@@ -26,21 +26,23 @@ const BACKGROUND_STYLE: React.CSSProperties = {
     isOpen: boolean;
     setModalAberto: (isOpen: boolean) => void; // Declarando o tipo da propriedade setModalAberto
     children: React.ReactNode;
+    itemClicadoId: string | null; // Add this line
   };
 
-  export default function Modalquadrinho({ isOpen, setModalAberto, children }: ModalquadrinhoProps) {
-
-    if(isOpen){
-
-        return (
-            <div className='fundomodal' style={BACKGROUND_STYLE}>
-                <div className='conteudomodal' style={MODAL_STYLE}>
-                    <div className='fecharmodal' style={{ cursor: 'pointer'}} onClick={() => setModalAberto(true)}>x</div>
-                    <div>{children}</div>
-                </div>
-                <div className='fecharmodalbg' onClick={() => setModalAberto(true)}></div>
+  export default function Modalquadrinho({ isOpen, setModalAberto, children, itemClicadoId }: ModalquadrinhoProps) {
+    if (isOpen) {
+      return (
+        <div className='fundomodal' style={BACKGROUND_STYLE}>
+          <div className='conteudomodal' style={MODAL_STYLE}>
+            <div className='fecharmodal' style={{ cursor: 'pointer' }} onClick={() => setModalAberto(true)}>x</div>
+            <div>
+              <p>Item clicado: {itemClicadoId}</p>
+              {children}
             </div>
-          );
+          </div>
+          <div className='fecharmodalbg' onClick={() => setModalAberto(true)}></div>
+        </div>
+      );
     }
     return null;
-}
+  }
