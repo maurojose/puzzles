@@ -6,7 +6,7 @@ export const GET = async (req: Request, res: NextResponse) => {
   try {
     await main();
     const jogostat = await prisma.jogostatus.findMany();
-    return NextResponse.json({ message: "Success", jogostat }, { status: 200 });
+    return NextResponse.json(jogostat, { status: 200 });
   } catch (err) {
     return NextResponse.json({ message: "Erro", err }, { status: 500 });
   } finally {

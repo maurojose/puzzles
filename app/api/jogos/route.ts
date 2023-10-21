@@ -6,7 +6,7 @@ export const GET = async (req: Request, res: NextResponse) => {
   try {
     await main();
     const jogosget = await prisma.jogos.findMany();
-    return NextResponse.json({ message: "Success", jogosget }, { status: 200 });
+    return NextResponse.json(jogosget, { status: 200 });
   } catch (err) {
     return NextResponse.json({ message: "Erro", err }, { status: 500 });
   } finally {
@@ -21,6 +21,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     const jogospost = await prisma.jogos.create({ data: { premio, datafim, ganhador, participantes, arrecadacao, preco  } });
     return NextResponse.json({ message: "Success", jogospost }, { status: 201 });
   } catch (err) {
+    console.error(err);
     return NextResponse.json({ message: "Error post", err }, { status: 500 });
   } finally {
     await prisma.$disconnect();

@@ -28,18 +28,7 @@ import { main } from "@/app/api/route";
       console.log(`userid: ${userid}`);
       await main();
       const jogostat = await prisma.jogostatus.findMany({ where: { rodada, userid } });
-  
-      // Mapeie o array jogostat para retornar apenas as chaves desejadas
-      const simplifiedJogostat = jogostat.map((item) => {
-        return {
-          id: item.id,
-          url: item.url,
-          rodada: item.rodada,
-          userid: item.userid,
-        };
-      });
-  
-      return NextResponse.json(simplifiedJogostat, { status: 200 });
+      return NextResponse.json(jogostat, { status: 200 });
     } catch (err) {
       return NextResponse.json({ message: "Erro", err }, { status: 500 });
     } finally {

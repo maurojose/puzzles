@@ -28,26 +28,32 @@ import { main } from "@/app/api/route";
       console.log(`userid: ${userid}`);
       await main();
       const estoqueget = await prisma.estoque.findMany({ where: { rodada, userid } });
-  
-      // Mapeie o array jogostat para retornar apenas as chaves desejadas
-      const estoquemap = estoqueget.map((item) => {
-        return {
-          id: item.id,
-          qtd: item.qtd,
-          rodada: item.rodada,
-          userid: item.userid,
-          url: item.url,
-          data: item.data,
-        };
-      });
-  
-      return NextResponse.json(estoquemap, { status: 200 });
+      return NextResponse.json(estoqueget, { status: 200 });
     } catch (err) {
       return NextResponse.json({ message: "Erro", err }, { status: 500 });
     } finally {
       await prisma.$disconnect();
     }
   };
+
+
+  export const POST = async (req: Request, res: NextResponse) => {
+    try {
+      const parts = req.url.split("/estoque/")[1].split("/");
+      const rodada = parts[0];
+      const userid = parts[1];
+      const { id, qtd, url } = await req.json();
+      await main();
+      const estoquepost = await prisma.estoque.create({ data: { id, qtd, rodada, userid, url } });
+      return NextResponse.json({ message: "Success", estoquepost }, { status: 201 });
+    } catch (err) {
+      console.error(err);
+      return NextResponse.json({ message: "Error post", err }, { status: 500 });
+    } finally {
+      await prisma.$disconnect();
+    }
+  };
+
 
   export const PUT = async (req: Request, res: NextResponse) => {
     try {

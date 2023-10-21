@@ -6,16 +6,7 @@ export const GET = async (req: Request, res: NextResponse) => {
   try {
     await main();
     const gabaritoget = await prisma.gabarito.findMany();
-
-    const gabaritomap = gabaritoget.map((item) => {
-      return {
-        id: item.id,
-        rodada: item.rodada,
-        url: item.url
-      };
-    });
-
-    return NextResponse.json(gabaritomap, { status: 200 });
+    return NextResponse.json(gabaritoget, { status: 200 });
     } catch (err) {
       return NextResponse.json({ message: "Erro", err }, { status: 500 });
     } finally {

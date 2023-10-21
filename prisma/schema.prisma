@@ -34,13 +34,13 @@
 
     model jogos {
     id            String @id @default(auto()) @map("_id") @db.ObjectId
-    premio        String
+    premio        String?
     datacomeco    DateTime @default(now())
-    datafim       DateTime
-    ganhador      String
-    participantes String
-    arrecadacao   String
-    preco         String
+    datafim       DateTime?
+    ganhador      String?
+    participantes String?
+    arrecadacao   String?
+    preco         String?
   }
 
     model users {
