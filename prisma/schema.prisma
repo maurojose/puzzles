@@ -19,7 +19,7 @@
 
   model estoque {
     id          String   @id @map("_id")
-    qtd         String
+    qtd         String?
     rodada      String
     userid      String
     url         String
@@ -34,19 +34,19 @@
 
     model jogos {
     id            String @id @default(auto()) @map("_id") @db.ObjectId
-    premio        String?
+    premio        Int?
     datacomeco    DateTime @default(now())
     datafim       DateTime?
     ganhador      String?
-    participantes String?
-    arrecadacao   String?
-    preco         String?
+    participantes Int?
+    arrecadacao   Int?
+    preco         Int
   }
 
     model users {
     id            String @id @default(auto()) @map("_id") @db.ObjectId
     nome          String
-    saldo         String
+    saldo         String?
     date          DateTime @default(now())
     
   }

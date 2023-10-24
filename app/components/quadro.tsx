@@ -81,8 +81,37 @@ async function handleCompra() {
       }
 
       // Agora teremos que atualizar o saldo do usuário
+      //primeiro acho o saldo
+      const fetchUsers = await fetch(`http://localhost:3000/api/users/${USER_ID}`);
+      const usersJson = await fetchUsers.json();
+      const findUser = usersJson.find(objeto => objeto.id === USER_ID);
+      const saldoUser = parseInt(findUser.saldo,10);
 
+      //depois acho o preço da peça pra descontar do saldo
+      const fetchPreco = await fetch(`http://localhost:3000/api/jogos`);
+      const precoJson = await fetchPreco.json();
+      const findPreco = precoJson.find(objeto => objeto.id === ID_RODADA);
+      const precoAtual = parseInt(findPreco.preco,10);
+      
+      //desconto o preço do saldo
+      const setSaldoUser = saldoUser - precoAtual;
+      const saldo = setSaldoUser.toString();
 
+      //insiro o valor na tabela
+
+      const fetchPutSaldo = await fetch(`http://localhost:3000/api/users/${USER_ID}`, {
+          method: "PUT",
+          body: JSON.stringify(saldo),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (fetchPutSaldo.ok) {
+          console.log("seu saldo agora é ", saldo);
+        } else {
+          console.log("Erro ao atualizar o saldo");
+        }
     }
   } else {
     console.log("Erro 404 - esse jogo não existe");
