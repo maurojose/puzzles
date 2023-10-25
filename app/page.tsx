@@ -29,13 +29,11 @@ export default async function Home() {
   const data = await getData();
   const listaEstoque = await estoqueData();
   const nCartas = listaEstoque.length;
-  console.log(data);
-  console.log(listaEstoque);
 
   return (
     <div className='conteudo my-10'>
-      <Quadro data={data} nCartas={nCartas} listaEstoque={listaEstoque}/>
+      <Quadro data={data} nCartas={nCartas} listaEstoque={listaEstoque} />
     </div>
-    
+
   );
 }
