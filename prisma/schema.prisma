@@ -11,14 +11,16 @@
   }
 
   model jogostatus {
-    id          String   @id @map("_id")
+    idunico     String @id @default(auto()) @map("_id") @db.ObjectId
+    id          String
     url         String
     rodada      String
     userid      String
   }
 
   model estoque {
-    id          String   @id @map("_id")
+    idunico     String @id @default(auto()) @map("_id") @db.ObjectId
+    id        String
     qtd         String?
     rodada      String
     userid      String
@@ -27,7 +29,8 @@
   }
 
     model gabarito {
-    id          String   @id @map("_id")
+    idunico     String @id @default(auto()) @map("_id") @db.ObjectId
+    id          String
     rodada      String
     url         String
   }

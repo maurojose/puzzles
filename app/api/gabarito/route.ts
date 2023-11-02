@@ -27,7 +27,7 @@ export const GET = async (req: Request, res: NextResponse) => {
   }
 };*/
 
-/* vários objetos de uma vez só:
+//vários objetos de uma vez só:
 
 export const POST = async (req: Request, res: NextResponse) => {
     try {
@@ -36,13 +36,27 @@ export const POST = async (req: Request, res: NextResponse) => {
       for (const item of requestData) {
         const { id, rodada, url } = item;
         const gabaritopost = await prisma.gabarito.create({ data: { id, rodada, url } });
+        console.log(gabaritopost);
       }
   
-      return NextResponse.json({ message: "Success" }, { status: 201 });
+      return NextResponse.json({ message: "Success", }, { status: 201 });
     } catch (err) {
       return NextResponse.json({ message: "Error post", err }, { status: 500 });
     } finally {
       await prisma.$disconnect();
     }
-  };*/
+  };
+
+  export const DELETE = async (req: Request, res: NextResponse) => {
+    try {
+      await main();
+      const deleteResult = await prisma.gabarito.deleteMany({});
+      return NextResponse.json({ message: "Success", deleteResult }, { status: 200 });
+    } catch (error) {
+      return NextResponse.json({ message: "Error", error }, { status: 500 });
+    } finally {
+      await prisma.$disconnect();
+    }
+  };
+  
   

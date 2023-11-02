@@ -25,14 +25,31 @@ export async function estoqueData() {
   return estoque;
 }
 
+export const fetchbootCartas = async () =>
+{ const awaitBootCartas = await estoqueData(); 
+  const bootCartas = awaitBootCartas.length;
+  return bootCartas;
+}
+
+export async function carregarSaldo() {
+      
+  const fetchUsers = await fetch(`http://localhost:3000/api/users/${USER_ID}`);
+  const usersJson = await fetchUsers.json();
+  const findUser = usersJson.find(objeto => objeto.id === USER_ID);
+  const saldoUser = findUser.saldo;
+
+  return saldoUser;
+}
+
 export default async function Home() {
   const data = await getData();
   const listaEstoque = await estoqueData();
-  const nCartas = listaEstoque.length;
+  const bootCartas = await fetchbootCartas();
+  const startSaldo = await carregarSaldo();
 
   return (
     <div className='conteudo my-10'>
-      <Quadro data={data} nCartas={nCartas} listaEstoque={listaEstoque} />
+      <Quadro data={data} bootCartas = {bootCartas} startSaldo={startSaldo} listaEstoque={listaEstoque} />
     </div>
 
   );

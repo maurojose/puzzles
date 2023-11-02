@@ -7,14 +7,16 @@ type QuadrinhoProps = {
   data: Array<{ id: string; url: string }>;
 };
 
+
 const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, data }) => {
+  //console.log("assim que chega no quadrinho:",data);
   const quadrinhoData = data.find(item => String(item.id) === String(id));
   const defaultImage = 'quadrovazio.png';
   const imageUrl = quadrinhoData ? quadrinhoData.url : defaultImage;
 
   return (
     <li id={`${id}`} className="quadrinho" onClick={onClick}>
-      <Image src={`/PuzzleCompleto/${imageUrl}`} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
+      <Image priority={true} src={`/PuzzleCompleto/${imageUrl}`} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
     </li>
   );
 };

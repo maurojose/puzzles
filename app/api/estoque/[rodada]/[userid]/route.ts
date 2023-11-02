@@ -61,10 +61,16 @@ import { main } from "@/app/api/route";
       const rodada = parts[0];
       const userid = parts[1];
       const { id, qtd } = await req.json();
+
+      const fetchIdunico = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
+      const jsonIdunico = await fetchIdunico.json();
+      const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
+      const idunico = findIdunico.idunico;
+
       await main();
       const updateEstoque = await prisma.estoque.update({
         data: { qtd },
-        where: { id, rodada, userid },
+        where: { idunico: idunico },
       });
       return NextResponse.json({ message: "Success", updateEstoque }, { status: 200 });
     } catch (error) {
