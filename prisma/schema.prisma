@@ -20,7 +20,7 @@
 
   model estoque {
     idunico     String @id @default(auto()) @map("_id") @db.ObjectId
-    id        String
+    id          String
     qtd         String?
     rodada      String
     userid      String

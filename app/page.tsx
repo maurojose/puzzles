@@ -25,10 +25,10 @@ export async function estoqueData() {
   return estoque;
 }
 
-export const fetchbootCartas = async () =>
-{ const awaitBootCartas = await estoqueData(); 
-  const bootCartas = awaitBootCartas.length;
-  return bootCartas;
+export const fetchbootPecas = async () =>
+{ const awaitBootPecas = await estoqueData(); 
+  const bootPecas = awaitBootPecas.length;
+  return bootPecas;
 }
 
 export async function carregarSaldo() {
@@ -44,12 +44,12 @@ export async function carregarSaldo() {
 export default async function Home() {
   const data = await getData();
   const listaEstoque = await estoqueData();
-  const bootCartas = await fetchbootCartas();
+  const bootPecas = await fetchbootPecas();
   const startSaldo = await carregarSaldo();
 
   return (
-    <div className='conteudo my-10'>
-      <Quadro data={data} bootCartas = {bootCartas} startSaldo={startSaldo} listaEstoque={listaEstoque} />
+    <div className='conteudo mb-8'>
+      <Quadro data={data} bootPecas = {bootPecas} startSaldo={startSaldo} listaEstoque={listaEstoque} />
     </div>
 
   );

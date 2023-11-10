@@ -1,27 +1,14 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-import { main } from "@/app/api/route";
+import { main } from "../route";
 
-export const GET = async (req: Request, res: NextResponse) => {
+export const DELETE = async (req: Request, res: NextResponse) => {
     try {
       await main();
-      const estoquest = await prisma.estoque.findMany();
-      return NextResponse.json(estoquest, { status: 200 });
-    } catch (err) {
-      return NextResponse.json({ message: "Erro", err }, { status: 500 });
-    } finally {
-      await prisma.$disconnect();
-    }
-  };
-
-  export const POST = async (req: Request, res: NextResponse) => {
-    try {
-      const { id, qtd, rodada, userid, url } = await req.json();
-      await main();
-      const estoquest = await prisma.estoque.create({ data: { id, qtd, rodada, userid, url } });
-      return NextResponse.json({ message: "Success", estoquest }, { status: 201 });
-    } catch (err) {
-      return NextResponse.json({ message: "Error post", err }, { status: 500 });
+      const deleteResult = await prisma.estoque.deleteMany({});
+      return NextResponse.json({ message: "Success", deleteResult }, { status: 200 });
+    } catch (error) {
+      return NextResponse.json({ message: "Error", error }, { status: 500 });
     } finally {
       await prisma.$disconnect();
     }

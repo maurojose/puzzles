@@ -2,26 +2,9 @@ import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import { main } from "@/app/api/route";
 
-/*export const GET = async (req: Request, res: NextResponse) => {
-    try {
-        const parts = req.url.split("/estoque/")[1].split("/");
-    const rodada = parts[0];
-    const userid = parts[1];
-    console.log(`rodada: ${rodada}`);
-    console.log(`userid: ${userid}`);
-      await main();
-      const estoquest = await prisma.estoque.findMany({where: {rodada, userid}});
-      return NextResponse.json({ message: "Success", estoquest }, { status: 200 });
-    } catch (err) {
-      return NextResponse.json({ message: "Erro", err }, { status: 500 });
-    } finally {
-      await prisma.$disconnect();
-    }
-  };*/
-
   export const GET = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/estoque/")[1].split("/");
+      const parts = req.url.split("/estoque/many/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       //console.log(`rodada: ${rodada}`);
@@ -36,9 +19,9 @@ import { main } from "@/app/api/route";
     }
   };
 
-  /*export const POST = async (req: Request, res: NextResponse) => {
+  export const POST = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/estoque/")[1].split("/");
+      const parts = req.url.split("/estoque/many/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       const dataToCreate = await req.json(); // Agora é um array de objetos
@@ -62,61 +45,17 @@ import { main } from "@/app/api/route";
     } finally {
       await prisma.$disconnect();
     }
-  };*/
-  
-
-  export const POST = async (req: Request, res: NextResponse) => {
-    try {
-      const parts = req.url.split("/estoque/")[1].split("/");
-      const rodada = parts[0];
-      const userid = parts[1];
-      const { id, qtd, url } = await req.json();
-      await main();
-      const estoquepost = await prisma.estoque.create({ data: { id, qtd, rodada, userid, url } });
-      return NextResponse.json({ message: "Success", estoquepost }, { status: 201 });
-    } catch (err) {
-      console.error(err);
-      return NextResponse.json({ message: "Error post", err }, { status: 500 });
-    } finally {
-      await prisma.$disconnect();
-    }
   };
-
+  
 
   export const PUT = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/estoque/")[1].split("/");
-      const rodada = parts[0];
-      const userid = parts[1];
-      const { id, qtd } = await req.json();
-
-      const fetchIdunico = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
-      const jsonIdunico = await fetchIdunico.json();
-      const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
-      const idunico = findIdunico.idunico;
-
-      await main();
-      const updateEstoque = await prisma.estoque.update({
-        data: { qtd },
-        where: { idunico: idunico },
-      });
-      return NextResponse.json({ message: "Success", updateEstoque }, { status: 200 });
-    } catch (error) {
-      return NextResponse.json({ message: "Error", error }, { status: 500 });
-    } finally {
-      await prisma.$disconnect();
-    }
-  };
-
-
-  /*export const PUT = async (req: Request, res: NextResponse) => {
-    try {
-      const parts = req.url.split("/estoque/")[1].split("/");
+      const parts = req.url.split("/estoque/many/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       const dataToUpdate = await req.json(); // Agora é um array de objetos
   
-      const fetchIdunico = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`http://localhost:3000/api/estoque/many/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       
       // Use um loop para percorrer o array e atualizar cada item
@@ -141,5 +80,4 @@ import { main } from "@/app/api/route";
     } finally {
       await prisma.$disconnect();
     }
-  };*/
-  
+  };

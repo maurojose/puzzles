@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { json } from "stream/consumers";
 
 export const GET = async (req: Request, res: NextResponse) => {
   try {
@@ -9,7 +8,7 @@ export const GET = async (req: Request, res: NextResponse) => {
     const ID_RODADA = rodada;
     const USER_ID = userid;
 
-    // Agora teremos que atualizar o saldo do usuário
+    // atualizar o saldo do usuário
     //primeiro acho o saldo
     const fetchUsers = await fetch(`http://localhost:3000/api/users/${USER_ID}`);
     const usersJson = await fetchUsers.json();

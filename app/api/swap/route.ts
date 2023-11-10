@@ -21,6 +21,34 @@ export const POST = async (req: Request, res: NextResponse) => {
     const requestStatus = { id: idClicado, url: urlStatus, };
 
     if (findIDStatus) { //se ja tem uma correspondencia de idClicado no id da tabela Status, então faz put na tabela status com novo url que pegou da tabela gabarito
+      
+      //mas antes tem que adicionar 1 de novo no campo qtd da tabela estoque do item que já está no status
+      const fetchItemStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+      const jsonItemStatus = await fetchItemStatus.json();
+      const findItemStatus = jsonItemStatus.find(item => item.id === idClicado);
+      const findUrlItem = findItemStatus.url;
+
+      const fetchQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
+      const qtdJson = await fetchQtd.json();
+      const findQtd = qtdJson.find(item => item.url === findUrlItem);
+      const quantidade = parseInt(findQtd.qtd, 10);
+      const intQtd = quantidade + 1;
+      const qtd = intQtd.toString();
+      const id = findQtd.id;
+      const requestPutQtd = { id, qtd };
+      const putQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`, {
+        method: "PUT",
+        body: JSON.stringify(requestPutQtd),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (putQtd.ok) {
+        console.log("id da peça atual do status:", id, "nova quntidade (era pra ser + 1):", qtd);
+      } else {
+        console.log("Erro ao atualizar a peça atual do status");
+      }      
+      
       const putStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
         method: "PUT",
         body: JSON.stringify(requestStatus),
@@ -29,9 +57,10 @@ export const POST = async (req: Request, res: NextResponse) => {
         },
       });
       console.log("ja tinha correspondencia", putStatus);
+
     }
 
-    else { //senão, faz um post na tabela status com id e url novos com dados pegos na tabela gabarito
+    else { //senão, faz um post na tabela status com id e url novos
       const postStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
         method: "POST",
         body: JSON.stringify(requestStatus),
@@ -123,121 +152,3 @@ export const POST = async (req: Request, res: NextResponse) => {
     return NextResponse.json({ message: "Error post", err }, { status: 500 });
   }
 };
-
-
-/*export const GET = async (req: Request, res: NextResponse) => {
-  try {
-   const parts = req.url.split("/swap/")[2].split("/");
-    const rodada = parts[0];
-    const userid = parts[1];
-    const idClicado = parts[2];
-    const resposta = {rodada,userid,idClicado};
-
-    const fetchGabarito = await fetch('http://localhost:3000/api/gabarito');
-    const jsonGabarito = await fetchGabarito.json();
-    const findRodada = jsonGabarito.find(item => item.rodada === rodada);
-    const findUrl = findRodada.find(item => item.id === idClicado);
-    const urlStatus = findUrl.url;
-
-    const fetchStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
-    const jsonStatus = await fetchStatus.json();
-    const findID = jsonStatus.find(item => item.id === idClicado);
-    const requestStatus = { idClicado, urlStatus };
-
-
-    if (findID) { //se ja tem uma correspondencia de idClicado no id da tabela Status, então faz put na tabela status com novo url que pegou da tabela gabarito
-      const putStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
-        method: "PUT",
-        body: JSON.stringify(requestStatus),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("ja tinha correspondencia", putStatus);
-    } else { //senão, faz um post na tabela status com id e url novos com dados pegos na tabela gabarito
-      const postStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
-        method: "POST",
-        body: JSON.stringify(requestStatus),
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
-      console.log("não tinha correspondencia", postStatus);
-    }
-
-    //depois desconta 1 no campo qtd da tabela estoque no item = idClicado
-    const fetchQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
-    const qtdJson = await fetchQtd.json();
-    const findQtd = qtdJson.find(item => item.id === idClicado);
-    const quantidade = parseInt(findQtd.qtd, 10);
-    const intQtd = quantidade-1;
-    const qtd = intQtd.toString();
-    const id = idClicado;
-
-    const requestPutQtd = { id, qtd };
-          const putQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`, {
-            method: "PUT",
-            body: JSON.stringify(requestPutQtd),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          if (putQtd.ok) {
-            console.log("ida da peça:", id, "quntidade:", qtd);
-          } else {
-            console.log("Erro ao atualizar a peça");
-          }
-
-
-    //depois verifica se o novo status bate com o gabarito e decide se o usuário é o ganhador ou nao
-    const numGabarito = jsonGabarito.length;
-    const fetchNovoStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
-    const novoStatus = await fetchNovoStatus.json();
-    const numNovoStatus = novoStatus.length;
-
-    const fetchJogos = await fetch('http://localhost:3000/api/jogos');
-    const jogoData = await fetchJogos.json();
-    const jogoAtual = jogoData.find(objeto => objeto.id === rodada);
-    const ganhadorAtual = jogoAtual.find(objeto => objeto.ganhador);
-
-    let isGanhador = "0";
-
-    if(ganhadorAtual){
-      return NextResponse.json(isGanhador, { status: 200 });
-    }else{
-
-      if (numGabarito !== numNovoStatus){
-        return NextResponse.json(isGanhador, { status: 200 });
-      }
-      else{
-  
-        const verificarIgualdade = (obj1: any, obj2: any): boolean =>{
-          return obj1.id === obj2.id && obj1.rodada === obj2.rodada && obj1.url === obj2.url;
-        }
-  
-        const verificaVitoria = (status: any[], gabarito: any[]): string =>{
-        for (let i = 0; i <= numGabarito; i++) {
-          if (!verificarIgualdade(status[i], gabarito[i])) {
-            return isGanhador;
-          }
-        }
-        isGanhador = "1";
-        return isGanhador;
-      }
-  
-      const resultado = verificaVitoria(novoStatus, jsonGabarito);
-  
-      return NextResponse.json(resultado, { status: 200 });
-    }
-
-    }
-
-
-    //se o novo status bate, e na tabela jogos a rodada nao tem um ganhador, coloca na tabela jogos o id do usuario como ganhador
-    return NextResponse.json(resposta,  { status: 200 });
-
-  } catch (err) {
-    return NextResponse.json("erro de status", { status: 500 });
-  }
-}
-*/
