@@ -18,13 +18,14 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #38A47D
+  background: #38A47D;
 }
 .conteudo{
   justify-content: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 20vh;
 }
 .contadorpecas{
   width: 360px;
@@ -44,17 +45,30 @@ body {
   background:'public/quadrovazio.png';
   width: 60px;
   height: 60px;
+  position: relative;
 }
+
 .botao{
   padding:16px;
   min-width: 160px;
   background: linear-gradient(341deg, #FFB801 25.25%, #F9DC8F 126.11%);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
-.fecharmodalbg{
-  z-index: 1001;
-  width: 100%;
-  height: 100%;
+.botaopecas{
+  padding: 4px;
+  height: 120px;
+  width: 120px;
+  background: linear-gradient(341deg, #FFB801 25.25%, #F9DC8F 126.11%);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.fecharmodal{
+  background-color: rgba(255, 0, 0, 0.7); /* Cor de fundo da div */
+  color: white; /* Cor do texto */
+  padding: 4px 8px; /* Espaçamento interno */
+  cursor: pointer; /* Cursor ao passar por cima */
+  position: absolute;
+  top: 0; /* Alinha a div no topo do <li> */
+  right: 0;
 }
 .quadromodal{
   z-index: 1002;
@@ -63,4 +77,78 @@ body {
 }
 .inputqtd{
   width: 75px;
+}
+.compras{
+  max-width: 360px;
+}
+.dashpecas{
+  height: 156px;
+  background-color: #FFF;
+  width: 100%;
+  bottom: 0;
+  position: fixed;
+  padding:10px;
+  overflow-x: hidden;
+  scroll-behavior:smooth;
+  color:#121212;
+  align-items: center;
+}
+.listapecas{
+  height: 136px;
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
+  padding: 12px;
+  gap:4px;
+  align-items: center;
+}
+.listapecas li{
+  height: auto;
+  min-width: 60px;
+  justify-content: center;
+}
+.controleaba{
+  position: relative;
+}
+.wrappecas{
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.quadrinhoselect{
+  border: solid 3px #FFB801;
+}
+.selectEstoque{
+  border: solid 4px #d80e0e;
+  display: none;
+}
+.quadrinho{
+  border:0;
+}
+
+.quadrinhoCerto{
+  border: solid 1px rgb(34, 118, 244);
+}
+.delpeca{
+  width: 60px;
+  height: 16px;
+  text-align: end;
+}
+.delpeca p{
+  height: inherit;
+  font-weight: 800;
+  color: #d80e0e;
+}
+.fechaquadrinho{
+  position: absolute;
+  top: 0; /* Alinha a div no topo do <li> */
+  right: 0; /* Alinha a div no canto direito do <li> */
+  background-color: rgba(255, 0, 0, 0.7); /* Cor de fundo da div */
+  color: white; /* Cor do texto */
+  padding: 4px 8px; /* Espaçamento interno */
+  cursor: pointer; /* Cursor ao passar por cima */
+}
+
+.fechaquadrinhonull{
+  display: none;
 }

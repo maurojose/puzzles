@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import Image from 'next/image';
 import React, { useState, useEffect, CSSProperties } from 'react'
 
@@ -28,6 +29,7 @@ type ModalquadrinhoProps = {
 
   children: React.ReactNode;
   isOpen: boolean;
+  setidClicado: string | null;
 
   setModalAberto: (isOpen: boolean) => void;
   idClicado: string | null;
@@ -42,75 +44,112 @@ type ModalquadrinhoProps = {
     setDataLoad: any,
     setLoadSwap: any,
     setlistaEstoqueLoad: any,
-    setEstoqueCarregando: boolean
+    setEstoqueCarregando: boolean,
+    setModalAberto: boolean,
+    dataLoad: any,
+    setIdMudanca: string | null
   ) => Promise<void>;
 
   handleSwap: (
     idClicado: string | null,
+    setidClicado: string | null,
     setDataLoad: any,
     setLoadSwap: any,
     imgsEstoque: any,
     imgsEstoqueId: any,
     setlistaEstoqueLoad: any,
     setModalAberto: any,
-    setEstoqueCarregando: boolean
+    setEstoqueCarregando: boolean,
+    dataLoad: any,
+    setIdMudanca: string | null,
+    setSaldo: string | null,
+    setGanhador: boolean,
+    setIdGanhador: string | null
   ) => Promise<void>;
 
   setDataLoad: any;
+  dataLoad: any;
   setLoadSwap: any;
   setlistaEstoqueLoad: any;
   setEstoqueCarregando: any;
   estoqueCarregando: any;
   pecas: string;
+  idMudanca: string | null;
+  setIdMudanca: string | null;
+  checkItem: string[] | null;
+  setSaldo: string | null;
+  setGanhador: boolean;
+  setIdGanhador: string | null;
+  setCheckItem: ((value: string[] | null) => void) | null;
 
 };
 
-export default function Modalquadrinho({ children, isOpen, pecas, setModalAberto, idClicado, listaEstoque, handleDelete, handleSwap, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, estoqueCarregando }: ModalquadrinhoProps) {
+export default function Modalquadrinho({
+  isOpen,
+  setModalAberto,
+  idClicado,
+  listaEstoque,
+  handleSwap,
+  setDataLoad,
+  setLoadSwap,
+  setlistaEstoqueLoad,
+  setEstoqueCarregando,
+  estoqueCarregando,
+  dataLoad,
+  setIdMudanca,
+  setidClicado,
+  checkItem,
+  setCheckItem,
+  setSaldo,
+  setGanhador,
+  setIdGanhador }: ModalquadrinhoProps) {
+  
+  const buscaUrlAtual = dataLoad.find(item => item.id === idClicado);
+  let urlAtual = "0";
+  
+  if(buscaUrlAtual){
+  urlAtual = buscaUrlAtual.url;
+  }
+
   if (isOpen) {
     return (
-      <div className='fundomodal content-start' style={BACKGROUND_STYLE}>
-        <div className='quadromodal p-10' style={MODAL_STYLE}>
-          <div className='fecharmodal mb-10 container content-end text-right font-black text-3xl' style={{ cursor: 'pointer' }} onClick={() => setModalAberto(true)}>
-              x
-          </div>
-          <div className='conteudoModal container'>
-            <div className='estoqueModal justify-items-center text-center'>
-                <div>
-                  <h4>QUADRINHO CLICADO: {idClicado}</h4>
-                  <button className='botao mt-5' onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando,)}>
-                    Retirar item do quadrinho atual
-                  </button>
-                  <div className='ListaEstoque mt-10 p-5 bg-slate-200'>
-                  <h4 className='container mb-3'>PEÇAS:</h4>
+              <div  className='dashpecas'>
+                <div className='fecharmodal font-black' onClick={() => { setModalAberto(true); setidClicado(null); }}>x</div>
+                
+                
+                  {/*<h4 className='container mb-3'>PEÇAS:</h4>
                   {estoqueCarregando ? (
-                <p>aguarde, atualizando o estoque...</p>
-              ) : (<p>({pecas}/66)</p> )}
-                  <ul className='flex flex-wrap justify-center mt-3'>
-                    {listaEstoque
-                      .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
-                      .map((imgsEstoque) => (
-                        <li className='m-1' key={imgsEstoque.id}>
-                          <Image
-                            onClick={() => handleSwap(idClicado, setDataLoad, setLoadSwap, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto)}
-                            priority={true}
-                            src={`/PuzzleCompleto/${imgsEstoque.url}`}
-                            width={60}
-                            height={60}
-                            alt='#'
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <p>({imgsEstoque.qtd})</p>
-                        </li>
-                      ))}
-                  </ul>
-                  </div>
-                </div>
-            </div>
-            <div className='compraModal text-center mt-10'>{children}</div>
-          </div>
-        </div>
-        <div className='fecharmodalbg' onClick={() => setModalAberto(true)}></div>
-      </div>
+                    <p>aguarde, atualizando o estoque...</p>
+                  ) : (<p>({pecas}/66)</p>)}*/}
+                  {estoqueCarregando? (<p>salvando...</p>) : (
+
+                    <div className='wrappecas'>
+                      {/*<button disabled={estoqueCarregando && idClicado === idMudanca} className='botaopecas' onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca)}>
+                  {estoqueCarregando && idClicado === idMudanca ? (<p>Load</p>) : (<p>XXX</p>)}
+                  </button>*/}
+
+                    <ul className='listapecas' /*className='flex flex-wrap justify-center mt-3'*/>
+                      {listaEstoque
+                        .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
+                        .map((imgsEstoque) => (
+                          <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || checkItem.includes(imgsEstoque.id)? ('selectEstoque'):('null')}>
+                            <Image
+                              onClick={() => handleSwap(idClicado, setDataLoad, setLoadSwap, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador)}
+                              priority={true}
+                              src={`/PuzzleCompleto/${imgsEstoque.url}`}
+                              width={60}
+                              height={60}
+                              alt='#'
+                              style={{ cursor: 'pointer' }}
+                            />
+                            <p className='text-center'>({imgsEstoque.qtd})</p>
+                          </li>
+                        ))}
+                    </ul>
+                    </div>
+
+                  )}
+              </div>
     );
   }
   return null;

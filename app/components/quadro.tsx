@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { USER_ID, ID_RODADA } from '../constants';
-import { estoqueData, getData } from '../page';
+import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../page';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
 const fetchPecas = async (setPecas, setPecasCarregando) => {
@@ -17,29 +17,42 @@ const fetchPecas = async (setPecas, setPecasCarregando) => {
 
 //função para retirar peça do status
 
-async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando,){
-  setLoadSwap(true);
-  setEstoqueCarregando(true);
-  const requestDelete = {rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString()};
+async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca) {
+  //setLoadSwap(true);
+  //setEstoqueCarregando(true);
+  const dataLoadFind = dataLoad.find(item => item.id === idClicado);
+  setIdMudanca(idClicado);
+
+  if (dataLoadFind) {
+    // Se o item com o ID desejado for encontrado
+    const updateData = dataLoad.filter(item => item.id !== idClicado);
+    setDataLoad(updateData);
+
+  } else {
+    console.log("Item não encontrado");
+  }
+
+  /*const requestDelete = {rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString()};
   const fetchDelete = await fetch('http://localhost:3000/api/del', {
     method: "POST",
     body: JSON.stringify(requestDelete),
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  }
+  
+  );
 
   const dataDelete = await fetchDelete.json();
   if(dataDelete === 1){
     console.log("peça deletada com sucesso");
   }else{ console.log("peça não deletada - erro");}
 
-  const getDataLoad = await getData();
+  getData();*/
   const getListaEstoque = await estoqueData();
   setlistaEstoqueLoad(getListaEstoque);
-  setEstoqueCarregando(false);
-  setDataLoad(getDataLoad);
-  setLoadSwap(false);
+  //setEstoqueCarregando(false);
+  //setLoadSwap(false);
 }
 
 
@@ -51,7 +64,7 @@ async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPe
 
   setSaldoCarregando(true);
   setEstoqueCarregando(true);
-  const requestCompra = {rodada:ID_RODADA, userid: USER_ID, valorQtd: valorQtd};
+  const requestCompra = { rodada: ID_RODADA, userid: USER_ID, valorQtd: valorQtd };
   const fetchCompra = await fetch('http://localhost:3000/api/compras', {
     method: "POST",
     body: JSON.stringify(requestCompra),
@@ -72,27 +85,101 @@ async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPe
   setEstoqueCarregando(false);
 }
 
-async function handleSwap(idClicado, setDataLoad, setLoadSwap, imgsEstoque, imgsEstoqueId, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto){
-  setLoadSwap(true);
-  //setModalAberto(false);
+async function handleSwap(
+  idClicado,
+  setDataLoad, setLoadSwap,
+  imgsEstoque,
+  imgsEstoqueId,
+  setlistaEstoqueLoad,
+  setEstoqueCarregando,
+  setModalAberto,
+  dataLoad,
+  setIdMudanca,
+  setCheckItem,
+  checkItem,
+  setidClicado,
+  setSaldo,
+  setGanhador,
+  setIdGanhador) {
   setEstoqueCarregando(true);
-  const requestSwap = {rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString(), imgEstoqueUrl: imgsEstoque, imgsEstoqueId};
-  const fetchSwap = await fetch('http://localhost:3000/api/swap', {
+  const dataLoadFind = dataLoad.find(item => item.id === idClicado);
+  setIdMudanca(idClicado);
+
+  if (dataLoadFind) {
+    // Se o item com o ID desejado for encontrado
+    const updateData = dataLoad.filter(item => item.id !== idClicado);
+    const requestUpdate = { id: idClicado, url: imgsEstoque };
+    updateData.push(requestUpdate);
+    console.log("dataload:", dataLoad);
+    console.log("requestupdate:", requestUpdate);
+    console.log("updatedata", updateData);
+    setDataLoad(updateData);
+
+  } else {
+    console.log("Item não encontrado");
+    const updateData = dataLoad;
+    const requestUpdate = { id: idClicado, url: imgsEstoque };
+    updateData.push(requestUpdate);
+    console.log("dataload:", dataLoad);
+    console.log("requestupdate:", requestUpdate);
+    console.log("updatedata", updateData);
+    setDataLoad(updateData);
+  }
+
+  const requestCheck = { id: idClicado.toString(), rodada: ID_RODADA, url: imgsEstoque };
+  const fetchCheck = await fetch('http://localhost:3000/api/gabcheck', {
     method: "POST",
-    body: JSON.stringify(requestSwap),
+    body: JSON.stringify(requestCheck),
     headers: {
       "Content-Type": "application/json",
     },
   });
-  
-  const dataSwap = await fetchSwap.json();
-  const getDataLoad = await getData();
+
+  const dataCheck = await fetchCheck.json();
+  //const dataCheck = await checkDataIndividual(idClicado, imgsEstoque);
+  console.log("resultado da checagem:", dataCheck.resultado);
+
+  let arrayCheck = checkItem;
+
+
+  if (dataCheck.resultado === "1") {
+    const newId = parseInt(idClicado, 10) + 1;
+    const newIdString = newId.toString();
+    setidClicado(newIdString);
+    setEstoqueCarregando(false);
+    arrayCheck.push(idClicado);
+    setCheckItem(arrayCheck);
+    console.log("quadrinho certo:", arrayCheck);
+    const requestSwap = { rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString(), imgEstoqueUrl: imgsEstoque, imgsEstoqueId };
+    const fetchSwap = await fetch('http://localhost:3000/api/swap', {
+      method: "POST",
+      body: JSON.stringify(requestSwap),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const dataSwap = await fetchSwap.json();
+    getData();
+    console.log("vc é ganhador?", dataSwap);
+    if(dataSwap === "1"){
+
+      const loadSaldo = await carregarSaldo();
+      setSaldo(loadSaldo);
+
+      setGanhador(true);
+      const AwaitGanhador = await verificaGanhador();
+      const findGanhador = AwaitGanhador.ganhadorAtual;
+      setIdGanhador(findGanhador);
+
+    }
+
+  } else {
+    setEstoqueCarregando(false);
+  }
   const getListaEstoque = await estoqueData();
   setlistaEstoqueLoad(getListaEstoque);
-  setEstoqueCarregando(false);
-  setDataLoad(getDataLoad);
-  setLoadSwap(false);
-  console.log("vc é ganhador?", dataSwap);
+  //setLoadSwap(false);
 }
 
 
@@ -100,6 +187,7 @@ type QuadroProps = {
   data: Array<{ id: string; url: string }>;
   bootPecas: string;
   startSaldo: string;
+  dtchck: string[] | null;
   listaEstoque: Array<{
     id: string;
     qtd: string;
@@ -107,7 +195,7 @@ type QuadroProps = {
   }>;
 };
 
-const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo }) => {
+const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck }) => {
   const [idClicado, setidClicado] = useState<string | null>(null);
   const [saldo, setSaldo] = useState(startSaldo); // Inicia com 0
   const [saldoCarregando, setSaldoCarregando] = useState(false); // Para controlar o carregamento do saldo
@@ -118,71 +206,116 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
   const [loadSwap, setLoadSwap] = useState(false);
   const [listaEstoqueLoad, setlistaEstoqueLoad] = useState(listaEstoque);
   const [estoqueCarregando, setEstoqueCarregando] = useState(false);
+  const [idMudanca, setIdMudanca] = useState<string | null>(null);
+  const [checkItem, setCheckItem] = useState<Array<string> | null>(dtchck);
+  const [ganhador, setGanhador] = useState(false);
+  const [idganhador, setIdGanhador] = useState<string | null>(null);
 
   const handleItemClicado = (id: string) => {
     setidClicado(id);
     setAbreModal(true);
   };
 
+  const [abreModal, setAbreModal] = useState(false);
+
   const quadrinhos = [];
   for (let i = 0; i < 66; i++) {
     quadrinhos.push(
-      <Quadrinho key={i} data={dataLoad} id={`${i}`} onClick={() => handleItemClicado(`${i}`)} />
-    );
-  }
-  //console.log('o dataload ta aqui ó:', dataLoad); 
-  const [abreModal, setAbreModal] = useState(false);
-
-  return (
-    <>
-      <div className='contadorpecas mb-0 flex justify-center'>
-      {PecasCarregando || Pecas === null? (
-        <h1>carregando saldo de Pecas...</h1>
-        ): (<h1>PEÇAS: {Pecas}/66</h1>)}
-      </div>
-      {loadSwap?(<h3>atualizando as peças</h3>):(<h3>atualizado</h3>)}
-      <div className='quadro flex justify-center'>
-        <ul className='quadrinhos grid grid-cols-6 grid-rows-11'>
-          {quadrinhos}
-        </ul>
-        <Modalquadrinho
+      <Quadrinho
+        key={i}
+        checkItem={checkItem}
+        data={dataLoad}
         idClicado={idClicado}
-        pecas = {Pecas}
+        id={`${i}`}
+        onClick={() => handleItemClicado(`${i}`)}
+
+
+        setidClicado={setidClicado}
+        idMudanca={idMudanca}
+        setIdMudanca={setIdMudanca}
+        pecas={Pecas}
         isOpen={abreModal}
         setModalAberto={() => setAbreModal(!abreModal)}
         listaEstoque={listaEstoqueLoad}
         handleSwap={handleSwap}
         handleDelete={handleDelete}
-        setlistaEstoqueLoad = {setlistaEstoqueLoad}
-        setDataLoad = {setDataLoad}
-        setLoadSwap = {setLoadSwap}
-        setEstoqueCarregando = {setEstoqueCarregando}
-        estoqueCarregando = {estoqueCarregando}
-        >
+        setlistaEstoqueLoad={setlistaEstoqueLoad}
+        setDataLoad={setDataLoad}
+        setLoadSwap={setLoadSwap}
+        setEstoqueCarregando={setEstoqueCarregando}
+        estoqueCarregando={estoqueCarregando}
+        setCheckItem={setCheckItem}
+      />
+    );
+  }
+  //console.log('o dataload ta aqui ó:', dataLoad); 
 
-          {saldoCarregando || saldo === null ? (<h2 className='saldo mt-4'>carregando saldo...</h2>):( <h2 className='saldo mt-4'>Seu saldo é: R${saldo}</h2>)}
-          {/* <button
-          disabled={saldoCarregando || saldo === '0'}
-          className='botao mt-5'
-          onClick=
-            {
-              () => handleCompra(setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando)
-            }>
-            COMPRAR NOVA PEÇA POR R$1
-          </button> */}
-          <form onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando)}>
-      <label>
-        Quantas peças quer comprar?
-        <input type="text" name="qtd" defaultValue={1} className='border-solid border mx-3 inputqtd' />
-      </label>
-      <button disabled={saldoCarregando || saldo === '0'} className='botao mt-5' type="submit">COMPRAR PEÇAS</button>
-    </form>
-          
-
-        </Modalquadrinho>
-      </div>
+  return (
+    <>
+      {ganhador ? (
+        <h1>
+          temos um vencedor! {idganhador === USER_ID ? (
+            `Você, parabéns! Seu saldo é ${saldo}`
+          ) : (
+            'Mas não foi você, melhor sorte da próxima vez.'
+          )}
+        </h1>
+      ) : (
+        <div>
+          <div className='contadorpecas mb-0 flex justify-center'>
+            {PecasCarregando || Pecas === null ? (
+              <h1>Carregando saldo de peças...</h1>
+            ) : (
+              <h1>PEÇAS: {Pecas}/66</h1>
+            )}
+          </div>
+          <div className='quadro flex justify-center'>
+            <ul className='quadrinhos grid grid-cols-6 grid-rows-11'>
+              {quadrinhos}
+            </ul>
+            <Modalquadrinho
+              idClicado={idClicado}
+              setidClicado={setidClicado}
+              idMudanca={idMudanca}
+              setIdMudanca={setIdMudanca}
+              pecas={Pecas}
+              isOpen={abreModal}
+              setModalAberto={() => setAbreModal(!abreModal)}
+              listaEstoque={listaEstoqueLoad}
+              handleSwap={handleSwap}
+              handleDelete={handleDelete}
+              setlistaEstoqueLoad={setlistaEstoqueLoad}
+              setDataLoad={setDataLoad}
+              dataLoad={dataLoad}
+              setLoadSwap={setLoadSwap}
+              setEstoqueCarregando={setEstoqueCarregando}
+              estoqueCarregando={estoqueCarregando}
+              checkItem={checkItem}
+              setCheckItem={setCheckItem}
+              setSaldo={setSaldo}
+              setGanhador={setGanhador}
+              setIdGanhador={setIdGanhador}
+            />
+          </div>
+          <div className='compras flex flex-wrap justify-center p-4'>
+            {saldoCarregando || saldo === null ? (
+              <h2 className='saldo'>Carregando saldo...</h2>
+            ) : (
+              <h2 className='saldo mt-4'>Seu saldo é: R${saldo}</h2>
+            )}
+            <form className='compras_form flex flex-wrap justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando)}>
+              <label className='flex justify-center mt-5'>
+                Quantas peças quer comprar?
+                <input type="text" name="qtd" defaultValue={1} className='border-solid border mx-3 inputqtd flex text-black' />
+              </label>
+              <button disabled={saldoCarregando || saldo === '0'} className='flex botao mt-5' type="submit">COMPRAR PEÇAS</button>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
+  
 };
 
 export default Quadro;
