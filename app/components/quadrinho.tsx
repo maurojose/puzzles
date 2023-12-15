@@ -16,6 +16,7 @@ type QuadrinhoProps = {
   idMudanca: string | null;
   setIdMudanca: string | null;
   setCheckItem: ((value: string[] | null) => void) | null;
+  idUserAtual: string;
 
   isOpen: boolean;
   setidClicado: string | null;
@@ -35,12 +36,13 @@ type QuadrinhoProps = {
     setEstoqueCarregando: boolean,
     setModalAberto: boolean,
     dataLoad: any,
-    setIdMudanca: string | null
+    setIdMudanca: string | null,
+    idUserAtual: string
   ) => Promise<void>;
 
 };
 
-const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, setIdMudanca, handleDelete, estoqueCarregando }) => {
+const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, setIdMudanca, handleDelete, estoqueCarregando, idUserAtual }) => {
   const quadrinhoData = data.find(item => String(item.id) === String(id));
   const defaultImage = 'quadrovazio.png';
   const imageUrl = quadrinhoData ? quadrinhoData.url : defaultImage;
@@ -58,7 +60,7 @@ const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idC
   return (
     <li id={`${id}`} className={classNameLi} onClick={handleClick}>
 
-      <button onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, data, setModalAberto, setIdMudanca)}  className={classnameDelButton} >X</button>
+      <button onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, data, setModalAberto, setIdMudanca, idUserAtual)}  className={classnameDelButton} >X</button>
 
       <Image priority={true} src={`/PuzzleCompleto/${imageUrl}`} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
     </li>

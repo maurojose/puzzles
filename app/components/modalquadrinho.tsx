@@ -64,7 +64,8 @@ type ModalquadrinhoProps = {
     setIdMudanca: string | null,
     setSaldo: string | null,
     setGanhador: boolean,
-    setIdGanhador: string | null
+    setIdGanhador: string | null,
+    idUserAtual: string
   ) => Promise<void>;
 
   setDataLoad: any;
@@ -81,6 +82,7 @@ type ModalquadrinhoProps = {
   setGanhador: boolean;
   setIdGanhador: string | null;
   setCheckItem: ((value: string[] | null) => void) | null;
+  idUserAtual: string;
 
 };
 
@@ -102,7 +104,8 @@ export default function Modalquadrinho({
   setCheckItem,
   setSaldo,
   setGanhador,
-  setIdGanhador }: ModalquadrinhoProps) {
+  setIdGanhador,
+  idUserAtual }: ModalquadrinhoProps) {
   
   const buscaUrlAtual = dataLoad.find(item => item.id === idClicado);
   let urlAtual = "0";
@@ -134,7 +137,7 @@ export default function Modalquadrinho({
                         .map((imgsEstoque) => (
                           <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || checkItem.includes(imgsEstoque.id)? ('selectEstoque'):('null')}>
                             <Image
-                              onClick={() => handleSwap(idClicado, setDataLoad, setLoadSwap, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador)}
+                              onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, idUserAtual)}
                               priority={true}
                               src={`/PuzzleCompleto/${imgsEstoque.url}`}
                               width={60}

@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { USER_ID, ID_RODADA } from '../constants';
-import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../page';
+import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/page';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
-const fetchPecas = async (setPecas, setPecasCarregando) => {
+const fetchPecas = async (setPecas, setPecasCarregando, idUserAtual) => {
   setPecasCarregando(true);
-  let fetchNumPecas = await estoqueData();
+  let fetchNumPecas = await estoqueData(idUserAtual);
   let nPecas = fetchNumPecas.length;
   setPecas(nPecas);
   setPecasCarregando(false);
@@ -17,7 +17,7 @@ const fetchPecas = async (setPecas, setPecasCarregando) => {
 
 //função para retirar peça do status
 
-async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca) {
+async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca, idUserAtual) {
   //setLoadSwap(true);
   //setEstoqueCarregando(true);
   const dataLoadFind = dataLoad.find(item => item.id === idClicado);
@@ -49,7 +49,7 @@ async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoque
   }else{ console.log("peça não deletada - erro");}
 
   getData();*/
-  const getListaEstoque = await estoqueData();
+  const getListaEstoque = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   //setEstoqueCarregando(false);
   //setLoadSwap(false);
@@ -57,14 +57,14 @@ async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoque
 
 
 //aqui é o que o sistema faz quando clico em compra. Ele faz requisição pra api/compras, que volta dizendo se já existe tem vencedor, e, se nao tiver, depois da compra, qual o saldo.
-async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando) {
+async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual) {
   event.preventDefault();
   const valorQtd = event.target.elements.qtd.value;
   console.log('Valor:', valorQtd);
 
   setSaldoCarregando(true);
   setEstoqueCarregando(true);
-  const requestCompra = { rodada: ID_RODADA, userid: USER_ID, valorQtd: valorQtd };
+  const requestCompra = { rodada: ID_RODADA, userid: idUserAtual, valorQtd: valorQtd };
   const fetchCompra = await fetch('http://localhost:3000/api/compras', {
     method: "POST",
     body: JSON.stringify(requestCompra),
@@ -76,23 +76,22 @@ async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPe
   const vencedor = respostaCompra.vencedor;
   const saldo = respostaCompra.saldo;
   console.log(vencedor, saldo);
-  fetchPecas(setPecas, setPecasCarregando);
+  fetchPecas(setPecas, setPecasCarregando, idUserAtual);
   // Atualize o saldo na interface após a compra
   setSaldo(saldo);
   setSaldoCarregando(false);
-  const getListaEstoque = await estoqueData();
+  const getListaEstoque = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   setEstoqueCarregando(false);
 }
 
 async function handleSwap(
   idClicado,
-  setDataLoad, setLoadSwap,
+  setDataLoad,
   imgsEstoque,
   imgsEstoqueId,
   setlistaEstoqueLoad,
   setEstoqueCarregando,
-  setModalAberto,
   dataLoad,
   setIdMudanca,
   setCheckItem,
@@ -100,7 +99,8 @@ async function handleSwap(
   setidClicado,
   setSaldo,
   setGanhador,
-  setIdGanhador) {
+  setIdGanhador,
+  idUserAtual) {
   setEstoqueCarregando(true);
   const dataLoadFind = dataLoad.find(item => item.id === idClicado);
   setIdMudanca(idClicado);
@@ -150,7 +150,7 @@ async function handleSwap(
     arrayCheck.push(idClicado);
     setCheckItem(arrayCheck);
     console.log("quadrinho certo:", arrayCheck);
-    const requestSwap = { rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString(), imgEstoqueUrl: imgsEstoque, imgsEstoqueId };
+    const requestSwap = { rodada: ID_RODADA, userid: idUserAtual, idClicado: idClicado.toString(), imgEstoqueUrl: imgsEstoque, imgsEstoqueId };
     const fetchSwap = await fetch('http://localhost:3000/api/swap', {
       method: "POST",
       body: JSON.stringify(requestSwap),
@@ -160,11 +160,11 @@ async function handleSwap(
     });
 
     const dataSwap = await fetchSwap.json();
-    getData();
+    getData(idUserAtual);
     console.log("vc é ganhador?", dataSwap);
     if(dataSwap === "1"){
 
-      const loadSaldo = await carregarSaldo();
+      const loadSaldo = await carregarSaldo(idUserAtual);
       setSaldo(loadSaldo);
 
       setGanhador(true);
@@ -177,7 +177,7 @@ async function handleSwap(
   } else {
     setEstoqueCarregando(false);
   }
-  const getListaEstoque = await estoqueData();
+  const getListaEstoque = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   //setLoadSwap(false);
 }
@@ -185,6 +185,7 @@ async function handleSwap(
 
 type QuadroProps = {
   data: Array<{ id: string; url: string }>;
+  idUserAtual: string;
   bootPecas: string;
   startSaldo: string;
   dtchck: string[] | null;
@@ -195,7 +196,8 @@ type QuadroProps = {
   }>;
 };
 
-const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck }) => {
+const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck, idUserAtual }) => {
+
   const [idClicado, setidClicado] = useState<string | null>(null);
   const [saldo, setSaldo] = useState(startSaldo); // Inicia com 0
   const [saldoCarregando, setSaldoCarregando] = useState(false); // Para controlar o carregamento do saldo
@@ -245,16 +247,17 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
         setEstoqueCarregando={setEstoqueCarregando}
         estoqueCarregando={estoqueCarregando}
         setCheckItem={setCheckItem}
+        idUserAtual={idUserAtual}
       />
     );
   }
   //console.log('o dataload ta aqui ó:', dataLoad); 
-
   return (
     <>
+    
       {ganhador ? (
         <h1>
-          temos um vencedor! {idganhador === USER_ID ? (
+          temos um vencedor! {idganhador === idUserAtual ? (
             `Você, parabéns! Seu saldo é ${saldo}`
           ) : (
             'Mas não foi você, melhor sorte da próxima vez.'
@@ -295,6 +298,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
               setSaldo={setSaldo}
               setGanhador={setGanhador}
               setIdGanhador={setIdGanhador}
+              idUserAtual={idUserAtual}
             />
           </div>
           <div className='compras flex flex-wrap justify-center p-4'>
@@ -303,7 +307,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             ) : (
               <h2 className='saldo mt-4'>Seu saldo é: R${saldo}</h2>
             )}
-            <form className='compras_form flex flex-wrap justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando)}>
+            <form className='compras_form flex flex-wrap justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual)}>
               <label className='flex justify-center mt-5'>
                 Quantas peças quer comprar?
                 <input type="text" name="qtd" defaultValue={1} className='border-solid border mx-3 inputqtd flex text-black' />
