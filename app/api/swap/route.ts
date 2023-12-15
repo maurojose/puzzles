@@ -12,7 +12,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     console.log(urlStatus);
 
     // Verifica na tabela "status" se já existe um item com id igual ao id da peça clicada
-    const fetchStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+    const fetchStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
     const jsonStatus = await fetchStatus.json();
     const findIDStatus = jsonStatus.find(item => item.id === idClicado);
     console.log("find id status:", findIDStatus);
@@ -21,7 +21,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     if (findIDStatus) {
       // Se já existe correspondência de idClicado na tabela Status, faz PUT na tabela Status com novo URL
-      const fetchItemStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+      const fetchItemStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
       const jsonItemStatus = await fetchItemStatus.json();
       const findItemStatus = jsonItemStatus.find(item => item.id === idClicado);
       const findUrlItem = findItemStatus.url;
@@ -47,7 +47,7 @@ export const POST = async (req: Request, res: NextResponse) => {
         console.log("Erro ao atualizar a peça atual do status");
       }
 
-      const putStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
+      const putStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`, {
         method: "PUT",
         body: JSON.stringify(requestStatus),
         headers: {
@@ -57,7 +57,7 @@ export const POST = async (req: Request, res: NextResponse) => {
       console.log("já tinha correspondência", putStatus);
     } else {
       // Caso contrário, faz um POST na tabela Status com novos id e URL
-      const postStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
+      const postStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`, {
         method: "POST",
         body: JSON.stringify(requestStatus),
         headers: {
@@ -93,7 +93,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     const fetchGabarito = await fetch(`http://localhost:3000/api/gabarito/${rodada}`);
     const jsonGabarito = await fetchGabarito.json();
     const numGabarito = jsonGabarito.length;
-    const fetchNovoStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+    const fetchNovoStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
     const novoStatus = await fetchNovoStatus.json();
     const numNovoStatus = novoStatus.length;
     console.log("qtd gabarito", numGabarito);

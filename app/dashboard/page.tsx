@@ -41,7 +41,7 @@ export async function getServerSideProps(context) {
 }*/
 
 export async function getData(idUserAtual) {
-  const res = await fetch(`http://localhost:3000/api/status/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
+  const res = await fetch(`HTTP://localhost:3000/api/gamestatus/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -116,7 +116,7 @@ export async function verificaGanhador(){
   let ganhador = "0";
   let ganhadorAtual = "0";
 
-  const fetchJogos = await fetch(`http://localhost:3000/api/jogos`);
+  const fetchJogos = await fetch("http://localhost:3000/jogos");
   const jogoData = await fetchJogos.json();
   const jogoAtual = jogoData.find(objeto => objeto.id === ID_RODADA);
   if(jogoAtual){

@@ -4,7 +4,7 @@ import { main } from "@/app/api/route";
 
   export const GET = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/status/")[1].split("/");
+      const parts = req.url.split("/gamestatus/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       //console.log(`rodada: ${rodada}`);
@@ -21,7 +21,7 @@ import { main } from "@/app/api/route";
 
   export const POST = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/status/")[1].split("/");
+      const parts = req.url.split("/gamestatus/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       const { id, url } = await req.json();
@@ -39,12 +39,12 @@ import { main } from "@/app/api/route";
 
   export const PUT = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/status/")[1].split("/");
+      const parts = req.url.split("/gamestatus/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       const { id, url } = await req.json();
 
-      const fetchIdunico = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
       const idunico = findIdunico.idunico;
@@ -64,12 +64,12 @@ import { main } from "@/app/api/route";
   
   export const DELETE = async (req: Request, res: NextResponse) => {
     try {
-      const parts = req.url.split("/status/")[1].split("/");
+      const parts = req.url.split("/gamestatus/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];
       const { id } = await req.json();
 
-      const fetchIdunico = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
       const idunico = findIdunico.idunico;

@@ -8,7 +8,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     // adicionar 1 de novo no campo qtd da tabela estoque do item que já está no status
 
     //acho o url do item
-    const fetchItemStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`);
+    const fetchItemStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
     const jsonItemStatus = await fetchItemStatus.json();
     const findItemStatus = jsonItemStatus.find(item => item.id === idClicado);
     const findUrlItem = findItemStatus.url;
@@ -41,7 +41,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     //delete o item na tabela status
 
-    const deleteStatus = await fetch(`http://localhost:3000/api/status/${rodada}/${userid}`, {
+    const deleteStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`, {
       method: "DELETE",
       body: JSON.stringify({ id: idClicado }),
       headers: {
