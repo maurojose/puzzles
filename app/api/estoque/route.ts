@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-import { main } from "../route";
+import { main } from "../main";
 
 export const DELETE = async (req: Request, res: NextResponse) => {
     try {

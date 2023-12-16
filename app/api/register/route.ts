@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { main } from "../route";
+import { main } from "../main";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 

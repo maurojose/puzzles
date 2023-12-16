@@ -1,6 +1,6 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-import { main } from "@/app/api/route";
+import { main } from "@/app/api/main";
 
   export const GET = async (req: Request, res: NextResponse) => {
     try {
