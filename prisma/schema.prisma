@@ -52,6 +52,6 @@
     saldo         String?
     date          DateTime @default(now())
     password      String?
-    email         String
+    email         String?
     
   }
