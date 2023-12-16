@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { USER_ID, ID_RODADA } from '../constants';
-import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/page';
+import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
 const fetchPecas = async (setPecas, setPecasCarregando, idUserAtual) => {
