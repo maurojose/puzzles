@@ -64,7 +64,11 @@ const authOptions: any = {
         try {
           await main();
           const usergit = user.email;
-          const existingUser = await prisma.users.find(item => item.email === usergit);
+          const existingUser = await prisma.users.findMany({
+            where: {
+              email: usergit
+            }
+          });
           if (!existingUser) {
             const nome = "mauro"; // teste
             const saldo = "0"; //teste
