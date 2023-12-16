@@ -6,7 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { main } from "../../route";
 
-export const authOptions: any = {
+const authOptions: any = {
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
