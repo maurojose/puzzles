@@ -16,7 +16,7 @@ const authOptions: any = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: any, req?: any) {
         try {
           await main();
           const user = await prisma.users.findFirst({
@@ -24,20 +24,29 @@ const authOptions: any = {
               email: credentials.email
             }
           });
+      
           if (user) {
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
             );
             if (isPasswordCorrect) {
-              return user;
+              return {
+                id: user.id, // adicione as propriedades necessárias para o retorno
+                nome: user.nome,
+                saldo: user.saldo,
+                date: user.date,
+                email: user.email
+              };
             }
           }
-        } catch (err: any) {
-          throw new Error(err);
+        } catch (err) {
+          console.log(err);
         } finally {
           await prisma.$disconnect();
         }
+      
+        return null; // retorna null se as credenciais não forem válidas
       },
     }),
     GithubProvider({
