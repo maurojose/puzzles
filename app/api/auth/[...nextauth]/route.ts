@@ -72,7 +72,7 @@ const authOptions: any = {
           if (!existingUser) {
             const nome = "mauro"; // teste
             const saldo = "0"; //teste
-            const userspost = await prisma.users.create({ data: { nome, saldo, usergit } });
+            const userspost = await prisma.users.create({ data: { nome, saldo, email:usergit } });
             console.log("inserindo o usuário:", userspost);
           }
           return true;
