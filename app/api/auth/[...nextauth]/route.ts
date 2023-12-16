@@ -25,14 +25,14 @@ const authOptions: any = {
             }
           });
       
-          if (user) {
+          if (user && user.password) { // Verifica se user.password não é null
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
             );
             if (isPasswordCorrect) {
               return {
-                id: user.id, // adicione as propriedades necessárias para o retorno
+                id: user.id,
                 nome: user.nome,
                 saldo: user.saldo,
                 date: user.date,
@@ -46,7 +46,7 @@ const authOptions: any = {
           await prisma.$disconnect();
         }
       
-        return null; // retorna null se as credenciais não forem válidas
+        return null; // Retorna null se as credenciais não forem válidas
       },
     }),
     GithubProvider({
