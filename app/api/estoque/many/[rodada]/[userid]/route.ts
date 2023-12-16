@@ -55,7 +55,7 @@ import { main } from "@/app/api/route";
       const userid = parts[1];
       const dataToUpdate = await req.json(); // Agora é um array de objetos
   
-      const fetchIdunico = await fetch(`http://localhost:3000/api/estoque/many/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       
       // Use um loop para percorrer o array e atualizar cada item

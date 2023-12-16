@@ -4,44 +4,8 @@ import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-/*import { authOptions } from '../api/auth/[...nextauth]/route';
-import prisma from "@/prisma";
-import { main } from '../api/route';
-
-import { getSession } from 'next-auth/react';
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-  const userEmail = session.user.email;
-  try {
-    await main();
-    const findIdUser = await prisma.users.findFirst({
-      where: {
-        email: userEmail // Defina a condição de pesquisa para o campo "email"
-      }
-
-     });
-
-     const idUser = findIdUser?.id;
-    return {
-      props: {
-        idUser,
-      },
-    };
-  } catch (err) {
-    return {
-      redirect: {
-        destination: '/login', // Por exemplo, redireciona para a página de login
-        permanent: false,
-      },
-    };
-  } finally {
-    await prisma.$disconnect();
-  }
-}*/
-
 export async function getData(idUserAtual) {
-  const res = await fetch(`HTTP://localhost:3000/api/gamestatus/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -52,7 +16,7 @@ export async function getData(idUserAtual) {
 }
 
 export async function getGabarito() {
-  const res = await fetch(`http://localhost:3000/api/gabarito/${ID_RODADA}`, { cache: 'no-store' });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabarito/${ID_RODADA}`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -84,7 +48,7 @@ export async function checkData(idUserAtual) {
 
 
 export async function estoqueData(idUserAtual) {
-  const estoquefetch = await fetch(`http://localhost:3000/api/estoque/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
+  const estoquefetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
 
   if (!estoquefetch.ok) {
     throw new Error('Failed to fetch data');
@@ -103,7 +67,7 @@ export const fetchbootPecas = async (idUserAtual) => {
 
 export async function carregarSaldo(idUserAtual) {
 
-  const fetchUsers = await fetch(`http://localhost:3000/api/users/${idUserAtual}`);
+  const fetchUsers = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${idUserAtual}`);
   const usersJson = await fetchUsers.json();
   const findUser = usersJson.find(objeto => objeto.id === idUserAtual);
   const saldoUser = findUser.saldo;
@@ -116,7 +80,7 @@ export async function verificaGanhador(){
   let ganhador = "0";
   let ganhadorAtual = "0";
 
-  const fetchJogos = await fetch("http://localhost:3000/jogos");
+  const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
   const jogoData = await fetchJogos.json();
   const jogoAtual = jogoData.find(objeto => objeto.id === ID_RODADA);
   if(jogoAtual){
@@ -137,7 +101,7 @@ export async function verificaGanhador(){
 const Dashboard = async () => {
   const session = await getServerSession();
   const userEmail = session.user?.email;
-  const findIdByEmail = await fetch('http://localhost:3000/api/users/getid', {
+  const findIdByEmail = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/getid`, {
         method: "POST",
         body: JSON.stringify({userEmail}),
         headers: {

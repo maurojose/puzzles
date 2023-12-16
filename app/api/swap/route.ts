@@ -12,7 +12,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     console.log(urlStatus);
 
     // Verifica na tabela "status" se já existe um item com id igual ao id da peça clicada
-    const fetchStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
+    const fetchStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
     const jsonStatus = await fetchStatus.json();
     const findIDStatus = jsonStatus.find(item => item.id === idClicado);
     console.log("find id status:", findIDStatus);
@@ -21,12 +21,12 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     if (findIDStatus) {
       // Se já existe correspondência de idClicado na tabela Status, faz PUT na tabela Status com novo URL
-      const fetchItemStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
+      const fetchItemStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
       const jsonItemStatus = await fetchItemStatus.json();
       const findItemStatus = jsonItemStatus.find(item => item.id === idClicado);
       const findUrlItem = findItemStatus.url;
 
-      const fetchQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
+      const fetchQtd = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
       const qtdJson = await fetchQtd.json();
       const findQtd = qtdJson.find(item => item.url === findUrlItem);
       const quantidade = parseInt(findQtd.qtd, 10);
@@ -34,7 +34,7 @@ export const POST = async (req: Request, res: NextResponse) => {
       const qtd = intQtd.toString();
       const id = findQtd.id;
       const requestPutQtd = { id, qtd };
-      const putQtd = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`, {
+      const putQtd = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`, {
         method: "PUT",
         body: JSON.stringify(requestPutQtd),
         headers: {
@@ -47,7 +47,7 @@ export const POST = async (req: Request, res: NextResponse) => {
         console.log("Erro ao atualizar a peça atual do status");
       }
 
-      const putStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`, {
+      const putStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`, {
         method: "PUT",
         body: JSON.stringify(requestStatus),
         headers: {
@@ -57,7 +57,7 @@ export const POST = async (req: Request, res: NextResponse) => {
       console.log("já tinha correspondência", putStatus);
     } else {
       // Caso contrário, faz um POST na tabela Status com novos id e URL
-      const postStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`, {
+      const postStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`, {
         method: "POST",
         body: JSON.stringify(requestStatus),
         headers: {
@@ -68,7 +68,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     }
 
     // Depois subtrai 1 no campo qtd da tabela estoque no item = imgsEstoqueId (id do quadrinho clicado no modal)
-    const fetchQtd2 = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`);
+    const fetchQtd2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
     const qtdJson2 = await fetchQtd2.json();
     const findQtd2 = qtdJson2.find(item => item.id === imgsEstoqueId);
     const quantidade2 = parseInt(findQtd2.qtd, 10);
@@ -76,7 +76,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     const qtd2 = intQtd2.toString();
     const id2 = imgsEstoqueId;
     const requestPutQtd2 = { id: id2, qtd: qtd2 };
-    const putQtd2 = await fetch(`http://localhost:3000/api/estoque/${rodada}/${userid}`, {
+    const putQtd2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`, {
       method: "PUT",
       body: JSON.stringify(requestPutQtd2),
       headers: {
@@ -90,17 +90,17 @@ export const POST = async (req: Request, res: NextResponse) => {
     }
 
     // Verifica se o novo status bate com o gabarito e decide se o usuário é o ganhador ou não
-    const fetchGabarito = await fetch(`http://localhost:3000/api/gabarito/${rodada}`);
+    const fetchGabarito = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabarito/${rodada}`);
     const jsonGabarito = await fetchGabarito.json();
     const numGabarito = jsonGabarito.length;
-    const fetchNovoStatus = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
+    const fetchNovoStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
     const novoStatus = await fetchNovoStatus.json();
     const numNovoStatus = novoStatus.length;
     console.log("qtd gabarito", numGabarito);
     console.log("novo status", novoStatus);
     console.log("qtd novo status:", numNovoStatus);
 
-    const fetchJogos = await fetch(`http://localhost:3000/api/jogos/${rodada}`);
+    const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos/${rodada}`);
     const jogoData = await fetchJogos.json();
     const ganhadorAtual = jogoData.ganhador;
     console.log("valor do ganhador", ganhadorAtual);
@@ -133,7 +133,7 @@ export const POST = async (req: Request, res: NextResponse) => {
         if (resultado === 66) {
           const novoGanhador = {userid: userid};
 
-          const putGanhador = await fetch(`http://localhost:3000/api/jogos/${rodada}`, {
+          const putGanhador = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos/${rodada}`, {
           method: "PUT",
           body: JSON.stringify(novoGanhador),
           headers: {
@@ -144,14 +144,14 @@ export const POST = async (req: Request, res: NextResponse) => {
         console.log("parabéns");
         isGanhador = "1";
 
-        const fetchPremio = await fetch(`http://localhost:3000/api/jogos`);
+        const fetchPremio = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
         const premioJson = await fetchPremio.json();
         const findPremio = premioJson.find(objeto => objeto.id === rodada);
         const premioAtual =  findPremio.premio;
 
         console.log("premio atual é:", premioAtual);
 
-        const fetchSaldoUser = await fetch(`http://localhost:3000/api/users/${userid}`);
+        const fetchSaldoUser = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userid}`);
         const saldoUserJson = await fetchSaldoUser.json();
         const findUser = saldoUserJson.find(objeto => objeto.id === userid);
         const saldoUser =  parseInt(findUser.saldo,10);
@@ -163,7 +163,7 @@ export const POST = async (req: Request, res: NextResponse) => {
         const saldo = setSaldoUser.toString();
         //insiro o valor na tabela
 
-        const fetchPutSaldo = await fetch(`http://localhost:3000/api/users/${userid}`, {
+        const fetchPutSaldo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userid}`, {
           method: "PUT",
           body: JSON.stringify({saldo}),
           headers: {
@@ -192,9 +192,6 @@ export const POST = async (req: Request, res: NextResponse) => {
     return NextResponse.json({ message: "Error post", err }, { status: 500 });
   }
 };
-
-
-/*import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, res: NextResponse) => {
   try {

@@ -65,7 +65,7 @@ async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPe
   setSaldoCarregando(true);
   setEstoqueCarregando(true);
   const requestCompra = { rodada: ID_RODADA, userid: idUserAtual, valorQtd: valorQtd };
-  const fetchCompra = await fetch('http://localhost:3000/api/compras', {
+  const fetchCompra = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/compras`, {
     method: "POST",
     body: JSON.stringify(requestCompra),
     headers: {
@@ -127,7 +127,7 @@ async function handleSwap(
   }
 
   const requestCheck = { id: idClicado.toString(), rodada: ID_RODADA, url: imgsEstoque };
-  const fetchCheck = await fetch('http://localhost:3000/api/gabcheck', {
+  const fetchCheck = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabcheck`, {
     method: "POST",
     body: JSON.stringify(requestCheck),
     headers: {
@@ -151,7 +151,7 @@ async function handleSwap(
     setCheckItem(arrayCheck);
     console.log("quadrinho certo:", arrayCheck);
     const requestSwap = { rodada: ID_RODADA, userid: idUserAtual, idClicado: idClicado.toString(), imgEstoqueUrl: imgsEstoque, imgsEstoqueId };
-    const fetchSwap = await fetch('http://localhost:3000/api/swap', {
+    const fetchSwap = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap`, {
       method: "POST",
       body: JSON.stringify(requestSwap),
       headers: {

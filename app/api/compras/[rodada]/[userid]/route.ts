@@ -10,7 +10,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
     // atualizar o saldo do usuário
     //primeiro acho o saldo
-    const fetchUsers = await fetch(`http://localhost:3000/api/users/${USER_ID}`);
+    const fetchUsers = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${USER_ID}`);
     const usersJson = await fetchUsers.json();
     const findUser = usersJson.find(objeto => objeto.id === USER_ID);
     const saldoUser = findUser.saldo;
@@ -20,13 +20,13 @@ export const GET = async (req: Request, res: NextResponse) => {
     const id = idCompra.toString(); // Converte a ID para string
 
     // URL do quadrinho aleatorio
-    const fetchUrl = await fetch("http://localhost:3000/api/gabarito"); // Faz requisição do gabarito para buscar URL do ID
+    const fetchUrl = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabarito`); // Faz requisição do gabarito para buscar URL do ID
     const urlStatus = await fetchUrl.json(); // Transforma a resposta em um JSON
     const urlAtual = urlStatus.find(item => item.id === id); // Pega o objeto que tem o ID igual à ID gerada aleatoriamente
     const url = urlAtual.url; // Pega a chave "url" desse objeto
 
     // Verifica aqui se o jogo atual existe
-    const fetchJogos = await fetch(`http://localhost:3000/api/jogos`, { cache: 'no-store' });
+    const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`, { cache: 'no-store' });
     const jogoData = await fetchJogos.json();
     const jogoAtual = jogoData.find(objeto => objeto.id === ID_RODADA);
     //se o saldo for 0, para aqui mesmo.
@@ -50,7 +50,7 @@ export const GET = async (req: Request, res: NextResponse) => {
         // Se não tem um ganhador, podemos prosseguir.
         console.log("Não temos um ganhador");
         // Ao comprar, temos que atualizar a tabela de estoque. Verificamos se tem um objeto que já tem o ID aleatório gerado aqui.
-        const fetchEstoque = await fetch(`http://localhost:3000/api/estoque/${ID_RODADA}/${USER_ID}`, { cache: 'no-store' });
+        const fetchEstoque = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${USER_ID}`, { cache: 'no-store' });
         const estoqueStatus = await fetchEstoque.json();
         const estoqueAtual = estoqueStatus.find(objeto => objeto.id === id);
 
@@ -63,7 +63,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
           // Atualiza o estoque usando uma requisição PUT
           const requestput = { id, qtd };
-          const putPeca = await fetch(`http://localhost:3000/api/estoque/${ID_RODADA}/${USER_ID}`, {
+          const putPeca = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${USER_ID}`, {
             method: "PUT",
             body: JSON.stringify(requestput),
             headers: {
@@ -83,7 +83,7 @@ export const GET = async (req: Request, res: NextResponse) => {
           const requestBody = { id, qtd, url };
 
           // Adiciona a peça ao estoque usando uma requisição POST
-          const addPeca = await fetch(`http://localhost:3000/api/estoque/${ID_RODADA}/${USER_ID}`, {
+          const addPeca = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${USER_ID}`, {
             method: "POST",
             body: JSON.stringify(requestBody),
             headers: {
@@ -99,7 +99,7 @@ export const GET = async (req: Request, res: NextResponse) => {
         }
 
         //depois acho o preço da peça pra descontar do saldo
-        const fetchPreco = await fetch(`http://localhost:3000/api/jogos`);
+        const fetchPreco = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
         const precoJson = await fetchPreco.json();
         const findPreco = precoJson.find(objeto => objeto.id === ID_RODADA);
         const precoAtual = findPreco.preco;
@@ -109,7 +109,7 @@ export const GET = async (req: Request, res: NextResponse) => {
         const vencedor = "0";
         //insiro o valor na tabela
 
-        const fetchPutSaldo = await fetch(`http://localhost:3000/api/users/${USER_ID}`, {
+        const fetchPutSaldo = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${USER_ID}`, {
           method: "PUT",
           body: JSON.stringify({saldo}),
           headers: {

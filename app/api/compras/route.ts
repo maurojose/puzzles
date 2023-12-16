@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-const BASE_URL = "http://localhost:3000";
-
 const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
@@ -29,13 +27,13 @@ export const POST = async (req: Request, res: NextResponse) => {
     const USER_ID = userid;
 
     // Primeiro, acho o saldo do usuário
-    const usersUrl = `${BASE_URL}/api/users/${USER_ID}`;
+    const usersUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${USER_ID}`;
     const usersJson = await fetchJson(usersUrl);
     const findUser = usersJson.find((objeto) => objeto.id === USER_ID);
     const saldoUser = findUser.saldo;
 
     // Acha o preço da peça no jogo atual
-    const jogoUrl = `${BASE_URL}/api/jogos`;
+    const jogoUrl = `${process.env.NEXT_PUBLIC_API_URL}/jogos`;
     const precoJson = await fetchJson(jogoUrl);
     const findPreco = precoJson.find((objeto) => objeto.id === ID_RODADA);
     const precoAtual = findPreco.preco;
@@ -109,13 +107,13 @@ export const POST = async (req: Request, res: NextResponse) => {
             }else{
 
               // URL do quadrinho aleatório
-            const gabaritoUrl = `${BASE_URL}/api/gabarito`;
+            const gabaritoUrl = `${process.env.NEXT_PUBLIC_API_URL}/gabarito`;
             const fetchUrl = await fetchJson(gabaritoUrl);
             const urlAtual = fetchUrl.find((item) => item.id === idCompra);
             const url = urlAtual.url;
 
             // Verifica na tabela estoque se tem um objeto com a mesma ID
-            const estoqueUrl = `${BASE_URL}/api/estoque/many/${ID_RODADA}/${USER_ID}`;
+            const estoqueUrl = `${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${ID_RODADA}/${USER_ID}`;
             const fetchEstoque = await fetchJson(estoqueUrl);
             const estoqueAtual = fetchEstoque.find((objeto) => objeto.id === idCompra);
 
@@ -142,7 +140,7 @@ export const POST = async (req: Request, res: NextResponse) => {
           }
 
           if (arrayPut.length > 0) {
-            const estoqueManyUrl = `${BASE_URL}/api/estoque/many/${ID_RODADA}/${USER_ID}`;
+            const estoqueManyUrl = `${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${ID_RODADA}/${USER_ID}`;
             const putPeca = await fetch(estoqueManyUrl, {
               method: "PUT",
               body: JSON.stringify(arrayPut),
@@ -158,7 +156,7 @@ export const POST = async (req: Request, res: NextResponse) => {
           }
 
           if (arrayPost.length > 0) {
-            const estoqueManyUrl = `${BASE_URL}/api/estoque/many/${ID_RODADA}/${USER_ID}`;
+            const estoqueManyUrl = `${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${ID_RODADA}/${USER_ID}`;
             const addPeca = await fetch(estoqueManyUrl, {
               method: "POST",
               body: JSON.stringify(arrayPost),
@@ -179,7 +177,7 @@ export const POST = async (req: Request, res: NextResponse) => {
           const vencedor = "0";
 
           // Insira o saldo do usuário na tabela 'users' usando PUT
-          const updateSaldoUrl = `${BASE_URL}/api/users/${USER_ID}`;
+          const updateSaldoUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${USER_ID}`;
           const fetchPutSaldo = await fetch(updateSaldoUrl, {
             method: "PUT",
             body: JSON.stringify({ saldo }),

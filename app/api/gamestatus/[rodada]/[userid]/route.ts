@@ -44,7 +44,7 @@ import { main } from "@/app/api/route";
       const userid = parts[1];
       const { id, url } = await req.json();
 
-      const fetchIdunico = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
       const idunico = findIdunico.idunico;
@@ -69,7 +69,7 @@ import { main } from "@/app/api/route";
       const userid = parts[1];
       const { id } = await req.json();
 
-      const fetchIdunico = await fetch(`http://localhost:3000/api/gamestatus/${rodada}/${userid}`);
+      const fetchIdunico = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
       const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
       const idunico = findIdunico.idunico;
