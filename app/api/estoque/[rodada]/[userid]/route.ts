@@ -64,7 +64,7 @@ import { main } from "@/app/api/main";
 
       const fetchIdunico = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
       const jsonIdunico = await fetchIdunico.json();
-      const findIdunico = jsonIdunico.find(item => item.rodada === rodada && item.id === id && item.userid === userid);
+      const findIdunico = jsonIdunico.find((item: { rodada: string; id: string; userid: string; }) => item.rodada === rodada && item.id === id && item.userid === userid);
       const idunico = findIdunico.idunico;
 
       await main();

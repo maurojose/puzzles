@@ -28,11 +28,11 @@ import { main } from "@/app/api/main";
   
       await main();
       
-      // Use um loop para percorrer o array e criar cada item
-      const createdItems = await Promise.all(dataToCreate.map(async (item) => {
+      // um loop para percorrer o array e criar cada item
+      const createdItems = await Promise.all(dataToCreate.map(async (item: { id: string; qtd: string | null; url: string; }) => {
         const { id, qtd, url } = item;
   
-        // Crie o item no banco de dados
+        // Criar o item no banco de dados
         const estoquepost = await prisma.estoque.create({ data: { id, qtd, rodada, userid, url } });
   
         return estoquepost;
@@ -59,9 +59,9 @@ import { main } from "@/app/api/main";
       const jsonIdunico = await fetchIdunico.json();
       
       // Use um loop para percorrer o array e atualizar cada item
-      const updates = await Promise.all(dataToUpdate.map(async (item) => {
+      const updates = await Promise.all(dataToUpdate.map(async (item: { id: string; qtd: string | null; }) => {
         // Encontre o item no banco de dados com base no `id` do objeto da requisição
-        const existingItem = jsonIdunico.find(existingItem => existingItem.id === item.id);
+        const existingItem = jsonIdunico.find((existingItem: { id: string; }) => existingItem.id === item.id);
   
         if (!existingItem) {
           throw new Error(`Item com ID ${item.id} não encontrado no banco de dados.`);

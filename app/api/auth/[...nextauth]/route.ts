@@ -63,7 +63,7 @@ const authOptions: any = {
       if (account?.provider == "github") {
         try {
           await main();
-          const usergit = user.email;
+          const usergit: string | undefined = user.email ?? 'email@invalido.com';
           const existingUser = await prisma.users.findMany({
             where: {
               email: usergit

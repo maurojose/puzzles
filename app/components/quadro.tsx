@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
-import { USER_ID, ID_RODADA } from '../constants';
+import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
-const fetchPecas = async (setPecas, setPecasCarregando, idUserAtual) => {
+const fetchPecas = async (setPecas: (arg0: any) => void, setPecasCarregando: (arg0: boolean) => void, idUserAtual: any) => {
   setPecasCarregando(true);
   let fetchNumPecas = await estoqueData(idUserAtual);
   let nPecas = fetchNumPecas.length;
@@ -17,15 +17,15 @@ const fetchPecas = async (setPecas, setPecasCarregando, idUserAtual) => {
 
 //função para retirar peça do status
 
-async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca, idUserAtual) {
+async function handleDelete(idClicado: any, setDataLoad: (arg0: any) => void, setLoadSwap: any, setlistaEstoqueLoad: (arg0: any) => void, setEstoqueCarregando: any, dataLoad: any[], setModalAberto: any, setIdMudanca: (arg0: any) => void, idUserAtual: any) {
   //setLoadSwap(true);
   //setEstoqueCarregando(true);
-  const dataLoadFind = dataLoad.find(item => item.id === idClicado);
+  const dataLoadFind = dataLoad.find((item: { id: any; }) => item.id === idClicado);
   setIdMudanca(idClicado);
 
   if (dataLoadFind) {
     // Se o item com o ID desejado for encontrado
-    const updateData = dataLoad.filter(item => item.id !== idClicado);
+    const updateData = dataLoad.filter((item: { id: any; }) => item.id !== idClicado);
     setDataLoad(updateData);
 
   } else {
@@ -57,7 +57,7 @@ async function handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoque
 
 
 //aqui é o que o sistema faz quando clico em compra. Ele faz requisição pra api/compras, que volta dizendo se já existe tem vencedor, e, se nao tiver, depois da compra, qual o saldo.
-async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual) {
+async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: { (value: React.SetStateAction<string>): void; (arg0: any): void; }, setSaldoCarregando: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, setlistaEstoqueLoad: { (value: React.SetStateAction<{ id: string; qtd: string; url: string; }[]>): void; (arg0: any): void; }, setEstoqueCarregando: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, idUserAtual: string) {
   event.preventDefault();
   const valorQtd = event.target.elements.qtd.value;
   console.log('Valor:', valorQtd);
@@ -86,28 +86,28 @@ async function handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPe
 }
 
 async function handleSwap(
-  idClicado,
-  setDataLoad,
-  imgsEstoque,
-  imgsEstoqueId,
-  setlistaEstoqueLoad,
-  setEstoqueCarregando,
-  dataLoad,
-  setIdMudanca,
-  setCheckItem,
-  checkItem,
-  setidClicado,
-  setSaldo,
-  setGanhador,
-  setIdGanhador,
-  idUserAtual) {
+  idClicado: string,
+  setDataLoad: (arg0: any) => void,
+  imgsEstoque: any,
+  imgsEstoqueId: any,
+  setlistaEstoqueLoad: (arg0: any) => void,
+  setEstoqueCarregando: (arg0: boolean) => void,
+  dataLoad: any[],
+  setIdMudanca: (arg0: any) => void,
+  setCheckItem: (arg0: any) => void,
+  checkItem: any,
+  setidClicado: (arg0: string) => void,
+  setSaldo: (arg0: any) => void,
+  setGanhador: (arg0: boolean) => void,
+  setIdGanhador: (arg0: string) => void,
+  idUserAtual: any) {
   setEstoqueCarregando(true);
-  const dataLoadFind = dataLoad.find(item => item.id === idClicado);
+  const dataLoadFind = dataLoad.find((item: { id: any; }) => item.id === idClicado);
   setIdMudanca(idClicado);
 
   if (dataLoadFind) {
     // Se o item com o ID desejado for encontrado
-    const updateData = dataLoad.filter(item => item.id !== idClicado);
+    const updateData = dataLoad.filter((item: { id: any; }) => item.id !== idClicado);
     const requestUpdate = { id: idClicado, url: imgsEstoque };
     updateData.push(requestUpdate);
     console.log("dataload:", dataLoad);

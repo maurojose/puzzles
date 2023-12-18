@@ -107,7 +107,7 @@ export default function Modalquadrinho({
   setIdGanhador,
   idUserAtual }: ModalquadrinhoProps) {
   
-  const buscaUrlAtual = dataLoad.find(item => item.id === idClicado);
+  const buscaUrlAtual = dataLoad.find((item: { id: string | null; }) => item.id === idClicado);
   let urlAtual = "0";
   
   if(buscaUrlAtual){

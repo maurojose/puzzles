@@ -10,13 +10,13 @@ export const POST = async (req: Request, res: NextResponse) => {
     //acho o url do item
     const fetchItemStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
     const jsonItemStatus = await fetchItemStatus.json();
-    const findItemStatus = jsonItemStatus.find(item => item.id === idClicado);
+    const findItemStatus = jsonItemStatus.find((item: { id: string; }) => item.id === idClicado);
     const findUrlItem = findItemStatus.url;
 
     //consulto a tabela estoque pra pegar o item que tem esse url
     const fetchQtd = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
     const qtdJson = await fetchQtd.json();
-    const findQtd = qtdJson.find(item => item.url === findUrlItem);
+    const findQtd = qtdJson.find((item: { url: string; }) => item.url === findUrlItem);
 
     //somo 1
     const quantidade = parseInt(findQtd.qtd, 10);

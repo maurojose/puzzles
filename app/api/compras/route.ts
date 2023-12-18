@@ -7,12 +7,12 @@ const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-const fetchJson = async (url) => {
+const fetchJson = async (url: RequestInfo | URL) => {
   const response = await fetch(url, { cache: "no-store" });
   return response.json();
 };
 
-const handleErrors = (response, errorMessage) => {
+const handleErrors = (response: Response, errorMessage: string) => {
   if (!response.ok) {
     console.error(errorMessage);
     throw new Error("Request failed");
@@ -29,13 +29,13 @@ export const POST = async (req: Request, res: NextResponse) => {
     // Primeiro, acho o saldo do usuário
     const usersUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${USER_ID}`;
     const usersJson = await fetchJson(usersUrl);
-    const findUser = usersJson.find((objeto) => objeto.id === USER_ID);
+    const findUser = usersJson.find((objeto: { id: string; }) => objeto.id === USER_ID);
     const saldoUser = findUser.saldo;
 
     // Acha o preço da peça no jogo atual
     const jogoUrl = `${process.env.NEXT_PUBLIC_API_URL}/jogos`;
     const precoJson = await fetchJson(jogoUrl);
-    const findPreco = precoJson.find((objeto) => objeto.id === ID_RODADA);
+    const findPreco = precoJson.find((objeto: { id: string; }) => objeto.id === ID_RODADA);
     const precoAtual = findPreco.preco;
 
     if (saldoUser === null || saldoUser < valorQtd * precoAtual) {
@@ -48,7 +48,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 
       // Verifica se o jogo atual existe
       const jogoData = await fetchJson(jogoUrl);
-      const jogoAtual = jogoData.find((objeto) => objeto.id === ID_RODADA);
+      const jogoAtual = jogoData.find((objeto: { id: string; }) => objeto.id === ID_RODADA);
 
       if (jogoAtual) {
         const ganhadorAtual = jogoAtual.ganhador;
@@ -63,13 +63,11 @@ export const POST = async (req: Request, res: NextResponse) => {
 
           let arrayPut = [];
           let arrayPost = [];
-          let arrayUnicos = [];
+          let arrayUnicos: string[] = [];
           
           for (let i = 1; i <= valorQtd; i++) {
             // ID da peça
             const idCompra = Math.floor(Math.random() * 66).toString();
-            //ta tudo funcionando certo, mas se gerar dois numeros randomincos iguais, ta treta, tem que consertar isso ai
-            //use o arrayUnicos pra isso.
 
             //se o valor de idCompra for encontrado em arrayunicos, verifique se o valor se encontra tb em arrayput.
             //se estiver, aumenta 1 (ou seja, qtd+1) em arrayput
@@ -109,13 +107,13 @@ export const POST = async (req: Request, res: NextResponse) => {
               // URL do quadrinho aleatório
             const gabaritoUrl = `${process.env.NEXT_PUBLIC_API_URL}/gabarito`;
             const fetchUrl = await fetchJson(gabaritoUrl);
-            const urlAtual = fetchUrl.find((item) => item.id === idCompra);
+            const urlAtual = fetchUrl.find((item: { id: string; }) => item.id === idCompra);
             const url = urlAtual.url;
 
             // Verifica na tabela estoque se tem um objeto com a mesma ID
             const estoqueUrl = `${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${ID_RODADA}/${USER_ID}`;
             const fetchEstoque = await fetchJson(estoqueUrl);
-            const estoqueAtual = fetchEstoque.find((objeto) => objeto.id === idCompra);
+            const estoqueAtual = fetchEstoque.find((objeto: { id: string; }) => objeto.id === idCompra);
 
             // Se tem, pegue a quantidade
             if (estoqueAtual !== undefined) {
