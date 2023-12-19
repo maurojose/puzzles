@@ -7,7 +7,7 @@ import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
-const fetchPecas = async (setPecas: (arg0: any) => void, setPecasCarregando: (arg0: boolean) => void, idUserAtual: any) => {
+const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: any) => {
   setPecasCarregando(true);
   let fetchNumPecas = await estoqueData(idUserAtual);
   let nPecas = fetchNumPecas.length;
@@ -17,50 +17,43 @@ const fetchPecas = async (setPecas: (arg0: any) => void, setPecasCarregando: (ar
 
 //função para retirar peça do status
 
-async function handleDelete(idClicado: any, setDataLoad: (arg0: any) => void, setLoadSwap: any, setlistaEstoqueLoad: (arg0: any) => void, setEstoqueCarregando: any, dataLoad: any[], setModalAberto: any, setIdMudanca: (arg0: any) => void, idUserAtual: any) {
+async function handleDelete(
+  idClicado: string,
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>,
+  setlistaEstoqueLoad: (arg0: any) => void,
+  dataLoad: {
+    id: string;
+    url: string;
+}[],
+  setIdMudanca: (arg0: any) => void,
+  idUserAtual: any) {
   //setLoadSwap(true);
   //setEstoqueCarregando(true);
-  const dataLoadFind = dataLoad.find((item: { id: any; }) => item.id === idClicado);
+  const dataLoadFind = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   setIdMudanca(idClicado);
 
   if (dataLoadFind) {
     // Se o item com o ID desejado for encontrado
-    const updateData = dataLoad.filter((item: { id: any; }) => item.id !== idClicado);
+    const updateData = dataLoad.filter((item: { id: string; }) => item.id !== idClicado);
     setDataLoad(updateData);
 
   } else {
     console.log("Item não encontrado");
   }
-
-  /*const requestDelete = {rodada: ID_RODADA, userid: USER_ID, idClicado: idClicado.toString()};
-  const fetchDelete = await fetch('http://localhost:3000/api/del', {
-    method: "POST",
-    body: JSON.stringify(requestDelete),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-  
-  );
-
-  const dataDelete = await fetchDelete.json();
-  if(dataDelete === 1){
-    console.log("peça deletada com sucesso");
-  }else{ console.log("peça não deletada - erro");}
-
-  getData();*/
   const getListaEstoque = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
-  //setEstoqueCarregando(false);
-  //setLoadSwap(false);
 }
 
 
 //aqui é o que o sistema faz quando clico em compra. Ele faz requisição pra api/compras, que volta dizendo se já existe tem vencedor, e, se nao tiver, depois da compra, qual o saldo.
-async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: { (value: React.SetStateAction<string>): void; (arg0: any): void; }, setSaldoCarregando: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, setlistaEstoqueLoad: { (value: React.SetStateAction<{ id: string; qtd: string; url: string; }[]>): void; (arg0: any): void; }, setEstoqueCarregando: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void; }, idUserAtual: string) {
+async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: React.Dispatch<React.SetStateAction<string>>, setSaldoCarregando: React.Dispatch<React.SetStateAction<boolean>>, setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{ id: string; qtd: string; url: string; }[]>>, setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) {
   event.preventDefault();
-  const valorQtd = event.target.elements.qtd.value;
-  console.log('Valor:', valorQtd);
+  const qtdElement = event.currentTarget.querySelector('input[name="qtd"]') as HTMLInputElement | null;
+  if (qtdElement) {
+    const valorQtd = qtdElement.value;
 
   setSaldoCarregando(true);
   setEstoqueCarregando(true);
@@ -84,30 +77,39 @@ async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: {
   setlistaEstoqueLoad(getListaEstoque);
   setEstoqueCarregando(false);
 }
+}
 
 async function handleSwap(
   idClicado: string,
-  setDataLoad: (arg0: any) => void,
-  imgsEstoque: any,
-  imgsEstoqueId: any,
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>,
+  imgsEstoque: string,
+  imgsEstoqueId: string,
   setlistaEstoqueLoad: (arg0: any) => void,
   setEstoqueCarregando: (arg0: boolean) => void,
-  dataLoad: any[],
+  dataLoad: {
+    id: string;
+    url: string;
+}[],
   setIdMudanca: (arg0: any) => void,
   setCheckItem: (arg0: any) => void,
   checkItem: any,
-  setidClicado: (arg0: string) => void,
+  setidClicado: React.Dispatch<React.SetStateAction<string>>,
   setSaldo: (arg0: any) => void,
   setGanhador: (arg0: boolean) => void,
   setIdGanhador: (arg0: string) => void,
-  idUserAtual: any) {
+  idUserAtual: any)
+  
+  {
   setEstoqueCarregando(true);
-  const dataLoadFind = dataLoad.find((item: { id: any; }) => item.id === idClicado);
+  const dataLoadFind = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   setIdMudanca(idClicado);
 
   if (dataLoadFind) {
     // Se o item com o ID desejado for encontrado
-    const updateData = dataLoad.filter((item: { id: any; }) => item.id !== idClicado);
+    const updateData = dataLoad.filter((item: { id: string; }) => item.id !== idClicado);
     const requestUpdate = { id: idClicado, url: imgsEstoque };
     updateData.push(requestUpdate);
     console.log("dataload:", dataLoad);
@@ -198,7 +200,7 @@ type QuadroProps = {
 
 const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck, idUserAtual }) => {
 
-  const [idClicado, setidClicado] = useState<string | null>(null);
+  const [idClicado, setidClicado] = useState('');
   const [saldo, setSaldo] = useState(startSaldo); // Inicia com 0
   const [saldoCarregando, setSaldoCarregando] = useState(false); // Para controlar o carregamento do saldo
   const [PecasCarregando, setPecasCarregando] = useState(false); // Para controlar o carregamento do saldo de Pecas

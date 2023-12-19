@@ -1,6 +1,8 @@
-import { USER_ID, ID_RODADA } from '../constants';
+import { ID_RODADA } from '../constants';
 
-export async function getData(idUserAtual) {
+type idUser = string;
+
+export async function getData(idUserAtual: idUser) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
   
     if (!res.ok) {
@@ -22,7 +24,7 @@ export async function getData(idUserAtual) {
     return gabarito;
   }
   
-  export async function checkData(idUserAtual) {
+  export async function checkData(idUserAtual: idUser) {
   
     const reqGabarito = await getGabarito();
     const requestData = await getData(idUserAtual);
@@ -30,7 +32,7 @@ export async function getData(idUserAtual) {
   
     for (const item of requestData) {
       const { id, rodada, url } = item;
-      const check = reqGabarito.find(item => item.id === id && item.url === url);
+      const check = reqGabarito.find((item: { id: string; url: string; }) => item.id === id && item.url === url);
   
       if (check) {
         const checkId = check.id;
@@ -43,7 +45,7 @@ export async function getData(idUserAtual) {
   };
   
   
-  export async function estoqueData(idUserAtual) {
+  export async function estoqueData(idUserAtual: idUser) {
     const estoquefetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
   
     if (!estoquefetch.ok) {
@@ -55,17 +57,17 @@ export async function getData(idUserAtual) {
     return estoque;
   }
   
-  export const fetchbootPecas = async (idUserAtual) => {
+  export const fetchbootPecas = async (idUserAtual: idUser) => {
     const awaitBootPecas = await estoqueData(idUserAtual);
     const bootPecas = awaitBootPecas.length;
     return bootPecas;
   }
   
-  export async function carregarSaldo(idUserAtual) {
+  export async function carregarSaldo(idUserAtual: idUser) {
   
     const fetchUsers = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${idUserAtual}`);
     const usersJson = await fetchUsers.json();
-    const findUser = usersJson.find(objeto => objeto.id === idUserAtual);
+    const findUser = usersJson.find((objeto: { id: string; }) => objeto.id === idUserAtual);
     const saldoUser = findUser.saldo;
   
     return saldoUser;
@@ -78,7 +80,7 @@ export async function getData(idUserAtual) {
   
     const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
     const jogoData = await fetchJogos.json();
-    const jogoAtual = jogoData.find(objeto => objeto.id === ID_RODADA);
+    const jogoAtual = jogoData.find((objeto: { id: string; }) => objeto.id === ID_RODADA);
     if(jogoAtual){
       ganhadorAtual = jogoAtual.ganhador;
         if (ganhadorAtual !== null) {
