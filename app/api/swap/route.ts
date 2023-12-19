@@ -14,7 +14,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     // Verifica na tabela "status" se já existe um item com id igual ao id da peça clicada
     const fetchStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
     const jsonStatus = await fetchStatus.json();
-    const findIDStatus = jsonStatus.find((item: { id: any; }) => item.id === idClicado);
+    const findIDStatus = jsonStatus.find((item: { id: string; }) => item.id === idClicado);
     console.log("find id status:", findIDStatus);
 
     const requestStatus = { id: idClicado, url: urlStatus };
