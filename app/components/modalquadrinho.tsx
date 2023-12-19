@@ -29,10 +29,10 @@ type ModalquadrinhoProps = {
 
   children: React.ReactNode;
   isOpen: boolean;
-  setidClicado: string | null;
+  setidClicado: React.Dispatch<React.SetStateAction<string>>;
 
   setModalAberto: (isOpen: boolean) => void;
-  idClicado: string | null;
+  idClicado: string;
   listaEstoque: Array<{
     id: string;
     qtd: string;
@@ -40,36 +40,54 @@ type ModalquadrinhoProps = {
   }>;
 
   handleDelete: (
-    idClicado: string | null,
-    setDataLoad: any,
+    idClicado: string,
+    setDataLoad: React.Dispatch<React.SetStateAction<{
+      id: string;
+      url: string;
+  }[]>>,
     setLoadSwap: any,
     setlistaEstoqueLoad: any,
     setEstoqueCarregando: boolean,
     setModalAberto: boolean,
-    dataLoad: any,
+    dataLoad: {
+      id: string;
+      url: string;
+  }[],
     setIdMudanca: string | null
   ) => Promise<void>;
 
   handleSwap: (
-    idClicado: string | null,
-    setidClicado: string | null,
-    setDataLoad: any,
+    idClicado: string,
+    setidClicado: React.Dispatch<React.SetStateAction<string>>,
+    setDataLoad: React.Dispatch<React.SetStateAction<{
+      id: string;
+      url: string;
+  }[]>>,
     setLoadSwap: any,
-    imgsEstoque: any,
-    imgsEstoqueId: any,
+    imgsEstoque: string,
+    imgsEstoqueId: string,
     setlistaEstoqueLoad: any,
     setModalAberto: any,
     setEstoqueCarregando: boolean,
-    dataLoad: any,
-    setIdMudanca: string | null,
-    setSaldo: string | null,
+    dataLoad: {
+      id: string;
+      url: string;
+  }[],
+    setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+    setSaldo: React.Dispatch<React.SetStateAction<string>>,
     setGanhador: boolean,
     setIdGanhador: string | null,
     idUserAtual: string
   ) => Promise<void>;
 
-  setDataLoad: any;
-  dataLoad: any;
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>;
+  dataLoad: {
+    id: string;
+    url: string;
+}[];
   setLoadSwap: any;
   setlistaEstoqueLoad: any;
   setEstoqueCarregando: any;
@@ -78,7 +96,7 @@ type ModalquadrinhoProps = {
   idMudanca: string | null;
   setIdMudanca: string | null;
   checkItem: string[] | null;
-  setSaldo: string | null;
+  setSaldo: React.Dispatch<React.SetStateAction<string>>;
   setGanhador: boolean;
   setIdGanhador: string | null;
   setCheckItem: ((value: string[] | null) => void) | null;
@@ -107,35 +125,28 @@ export default function Modalquadrinho({
   setIdGanhador,
   idUserAtual }: ModalquadrinhoProps) {
   
-  const buscaUrlAtual = dataLoad.find((item: { id: string | null; }) => item.id === idClicado);
+  const buscaUrlAtual = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   let urlAtual = "0";
   
   if(buscaUrlAtual){
-  urlAtual = buscaUrlAtual.url;
+    urlAtual = buscaUrlAtual.url || "0";
   }
 
   if (isOpen) {
     return (
               <div  className='dashpecas'>
-                <div className='fecharmodal font-black' onClick={() => { setModalAberto(true); setidClicado(null); }}>x</div>
+                <div className='fecharmodal font-black' onClick={() => { setModalAberto(true); setidClicado(''); }}>x</div>
                 
-                
-                  {/*<h4 className='container mb-3'>PEÇAS:</h4>
-                  {estoqueCarregando ? (
-                    <p>aguarde, atualizando o estoque...</p>
-                  ) : (<p>({pecas}/66)</p>)}*/}
+              
                   {estoqueCarregando? (<p>salvando...</p>) : (
 
                     <div className='wrappecas'>
-                      {/*<button disabled={estoqueCarregando && idClicado === idMudanca} className='botaopecas' onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setModalAberto, setIdMudanca)}>
-                  {estoqueCarregando && idClicado === idMudanca ? (<p>Load</p>) : (<p>XXX</p>)}
-                  </button>*/}
 
                     <ul className='listapecas' /*className='flex flex-wrap justify-center mt-3'*/>
                       {listaEstoque
                         .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
                         .map((imgsEstoque) => (
-                          <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || checkItem.includes(imgsEstoque.id)? ('selectEstoque'):('null')}>
+                          <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || (checkItem && checkItem.includes(imgsEstoque.id)) ? 'selectEstoque' : 'null'}>
                             <Image
                               onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, idUserAtual)}
                               priority={true}

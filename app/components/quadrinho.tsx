@@ -6,20 +6,23 @@ type QuadrinhoProps = {
   id: string;
   checkItem: string[] | null;
   data: Array<{ id: string; url: string }>;
-  idClicado: string | null;
+  idClicado: string;
 
-  setDataLoad: any;
-  setLoadSwap: any;
-  setlistaEstoqueLoad: any;
-  setEstoqueCarregando: any;
-  estoqueCarregando: any;
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>;
+  setLoadSwap: React.Dispatch<React.SetStateAction<any>>;
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<any>>;
+  setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>;
+  estoqueCarregando: boolean;
   idMudanca: string | null;
-  setIdMudanca: string | null;
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckItem: ((value: string[] | null) => void) | null;
   idUserAtual: string;
 
   isOpen: boolean;
-  setidClicado: string | null;
+  setidClicado: React.Dispatch<React.SetStateAction<string>>;
 
   setModalAberto: (isOpen: boolean) => void;
   listaEstoque: Array<{
@@ -29,18 +32,24 @@ type QuadrinhoProps = {
   }>;
 
   handleDelete: (
-    idClicado: string | null,
-    setDataLoad: any,
-    setLoadSwap: any,
-    setlistaEstoqueLoad: any,
-    setEstoqueCarregando: boolean,
-    setModalAberto: boolean,
-    dataLoad: any,
-    setIdMudanca: string | null,
+    idClicado: string,
+    setDataLoad: React.Dispatch<React.SetStateAction<{
+      id: string;
+      url: string;
+  }[]>>,
+    setLoadSwap: React.Dispatch<React.SetStateAction<any>>,
+    setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<any>>,
+    setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
+    dataLoad: {
+      id: string;
+      url: string;
+  }[],
+    setModalAberto: React.Dispatch<React.SetStateAction<boolean>>,
+    setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
     idUserAtual: string
   ) => Promise<void>;
-
 };
+
 
 const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, setIdMudanca, handleDelete, estoqueCarregando, idUserAtual }) => {
   const quadrinhoData = data.find(item => String(item.id) === String(id));

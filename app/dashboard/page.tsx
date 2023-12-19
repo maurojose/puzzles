@@ -6,7 +6,11 @@ import { redirect } from "next/navigation";
 import {getData, getGabarito, checkData, estoqueData, fetchbootPecas, carregarSaldo, verificaGanhador} from "../dashboard/functions"
 
 const Dashboard = async () => {
+
   const session = await getServerSession();
+  if (!session) {
+    redirect("/");
+  }
   const userEmail = session.user?.email;
   const findIdByEmail = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/getid`, {
         method: "POST",
@@ -18,19 +22,22 @@ const Dashboard = async () => {
   const idUserAtual = await findIdByEmail.json();
   console.log("id user atual:",idUserAtual);
 
+<<<<<<< HEAD
   const data = await getData(idUserAtual);
   console.log("data:", data);
+=======
+  const data: {
+    id: string;
+    url: string;
+}[] = await getData(idUserAtual);
+>>>>>>> 43c712a27e6b3406dceb4b5b39d854abb65e6603
   const listaEstoque = await estoqueData(idUserAtual);
   const bootPecas = await fetchbootPecas(idUserAtual);
-  const startSaldo = await carregarSaldo(idUserAtual);
+  const startSaldo: string = await carregarSaldo(idUserAtual);
   const dataCheck = await checkData(idUserAtual);
   const ganhadorCheck = await verificaGanhador();
   console.log(dataCheck);
   console.log("retorno de ganhador:", ganhadorCheck);
-
-  if (!session) {
-    redirect("/");
-  }
   return (
     <div className='conteudo mb-8'>
   {ganhadorCheck.ganhador === "1" ? (
