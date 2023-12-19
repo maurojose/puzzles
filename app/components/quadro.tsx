@@ -203,7 +203,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
   const [saldoCarregando, setSaldoCarregando] = useState(false); // Para controlar o carregamento do saldo
   const [PecasCarregando, setPecasCarregando] = useState(false); // Para controlar o carregamento do saldo de Pecas
   const [Pecas, setPecas] = useState(bootPecas);
-  //console.log("data começa assim: ", data);
+  console.log("data começa assim: ", data);
   const [dataLoad, setDataLoad] = useState(data);
   const [loadSwap, setLoadSwap] = useState(false);
   const [listaEstoqueLoad, setlistaEstoqueLoad] = useState(listaEstoque);
@@ -251,7 +251,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
       />
     );
   }
-  //console.log('o dataload ta aqui ó:', dataLoad); 
+  console.log('o dataload ta aqui ó:', dataLoad); 
   return (
     <>
     

@@ -16,8 +16,10 @@ const Dashboard = async () => {
         }
       });
   const idUserAtual = await findIdByEmail.json();
+  console.log("id user atual:",idUserAtual);
 
   const data = await getData(idUserAtual);
+  console.log("data:", data);
   const listaEstoque = await estoqueData(idUserAtual);
   const bootPecas = await fetchbootPecas(idUserAtual);
   const startSaldo = await carregarSaldo(idUserAtual);
