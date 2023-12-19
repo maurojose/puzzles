@@ -120,6 +120,7 @@ async function handleSwap(
   idUserAtual: string)
   
   {
+
   setEstoqueCarregando(true);
   const dataLoadFind = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   setIdMudanca(idClicado);
@@ -166,6 +167,7 @@ async function handleSwap(
     const newIdString = newId.toString();
     setidClicado(newIdString);
     setEstoqueCarregando(false);
+
     if(arrayCheck !== null){
     arrayCheck.push(idClicado);
     setCheckItem(arrayCheck);
@@ -192,7 +194,7 @@ async function handleSwap(
       const findGanhador = AwaitGanhador.ganhadorAtual;
       setIdGanhador(findGanhador);
 
-    }
+    }}
 
   } else {
     setEstoqueCarregando(false);
@@ -204,8 +206,6 @@ async function handleSwap(
   }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   //setLoadSwap(false);
-
-}
 }
 
 
