@@ -12,13 +12,17 @@ type QuadrinhoProps = {
     id: string;
     url: string;
 }[]>>;
-  setLoadSwap: React.Dispatch<React.SetStateAction<any>>;
-  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<any>>;
+  setLoadSwap: React.Dispatch<React.SetStateAction<boolean>>;
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>;
   setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>;
   estoqueCarregando: boolean;
   idMudanca: string | null;
   setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>;
-  setCheckItem: ((value: string[] | null) => void) | null;
+  setCheckItem: React.Dispatch<React.SetStateAction<string[] | null>>;
   idUserAtual: string;
 
   isOpen: boolean;
@@ -32,21 +36,23 @@ type QuadrinhoProps = {
   }>;
 
   handleDelete: (
-    idClicado: string,
-    setDataLoad: React.Dispatch<React.SetStateAction<{
-      id: string;
-      url: string;
-  }[]>>,
-    setLoadSwap: React.Dispatch<React.SetStateAction<any>>,
-    setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<any>>,
-    setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
-    dataLoad: {
-      id: string;
-      url: string;
-  }[],
-    setModalAberto: React.Dispatch<React.SetStateAction<boolean>>,
-    setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
-    idUserAtual: string
+    
+  idClicado: string,
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>,
+  dataLoad: {
+    id: string;
+    url: string;
+}[],
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+  idUserAtual: string
   ) => Promise<void>;
 };
 
@@ -65,11 +71,10 @@ const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idC
   // Define o className com base na presença do id em checkItem
   const classNameLi = hasIdInCheckItem ? "quadrinhoCerto" : id === idClicado ? "quadrinhoselect" : "quadrinho";
   const classnameDelButton = !hasIdInCheckItem && id === idClicado && quadrinhoData && !estoqueCarregando ? "fechaquadrinho" : "fechaquadrinhonull";
-
   return (
     <li id={`${id}`} className={classNameLi} onClick={handleClick}>
 
-      <button onClick={() => handleDelete(idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, data, setModalAberto, setIdMudanca, idUserAtual)}  className={classnameDelButton} >X</button>
+      <button onClick={() => handleDelete(idClicado, setDataLoad, setlistaEstoqueLoad, data, setIdMudanca, idUserAtual)}  className={classnameDelButton} >X</button>
 
       <Image priority={true} src={`/PuzzleCompleto/${imageUrl}`} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
     </li>

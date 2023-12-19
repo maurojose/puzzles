@@ -27,7 +27,6 @@ const MODAL_STYLE: React.CSSProperties = {
 
 type ModalquadrinhoProps = {
 
-  children: React.ReactNode;
   isOpen: boolean;
   setidClicado: React.Dispatch<React.SetStateAction<string>>;
 
@@ -41,43 +40,49 @@ type ModalquadrinhoProps = {
 
   handleDelete: (
     idClicado: string,
-    setDataLoad: React.Dispatch<React.SetStateAction<{
-      id: string;
-      url: string;
-  }[]>>,
-    setLoadSwap: any,
-    setlistaEstoqueLoad: any,
-    setEstoqueCarregando: boolean,
-    setModalAberto: boolean,
-    dataLoad: {
-      id: string;
-      url: string;
-  }[],
-    setIdMudanca: string | null
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>,
+  dataLoad: {
+    id: string;
+    url: string;
+}[],
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+  idUserAtual: string
   ) => Promise<void>;
 
   handleSwap: (
     idClicado: string,
-    setidClicado: React.Dispatch<React.SetStateAction<string>>,
-    setDataLoad: React.Dispatch<React.SetStateAction<{
-      id: string;
-      url: string;
-  }[]>>,
-    setLoadSwap: any,
-    imgsEstoque: string,
-    imgsEstoqueId: string,
-    setlistaEstoqueLoad: any,
-    setModalAberto: any,
-    setEstoqueCarregando: boolean,
-    dataLoad: {
-      id: string;
-      url: string;
-  }[],
-    setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
-    setSaldo: React.Dispatch<React.SetStateAction<string>>,
-    setGanhador: boolean,
-    setIdGanhador: string | null,
-    idUserAtual: string
+  setDataLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    url: string;
+}[]>>,
+  imgsEstoque: string,
+  imgsEstoqueId: string,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>,
+  setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
+  dataLoad: {
+    id: string;
+    url: string;
+}[],
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+  setCheckItem: React.Dispatch<React.SetStateAction<string[] | null>>,
+  checkItem: string[] | null,
+  setidClicado: React.Dispatch<React.SetStateAction<string>>,
+  setSaldo: React.Dispatch<React.SetStateAction<string>>,
+  setGanhador: React.Dispatch<React.SetStateAction<boolean>>,
+  setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
+  idUserAtual: string
   ) => Promise<void>;
 
   setDataLoad: React.Dispatch<React.SetStateAction<{
@@ -88,18 +93,22 @@ type ModalquadrinhoProps = {
     id: string;
     url: string;
 }[];
-  setLoadSwap: any;
-  setlistaEstoqueLoad: any;
-  setEstoqueCarregando: any;
-  estoqueCarregando: any;
+  setLoadSwap: React.Dispatch<React.SetStateAction<boolean>>;
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>;
+  setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>;
+  estoqueCarregando: boolean;
   pecas: string;
   idMudanca: string | null;
-  setIdMudanca: string | null;
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>;
   checkItem: string[] | null;
   setSaldo: React.Dispatch<React.SetStateAction<string>>;
-  setGanhador: boolean;
-  setIdGanhador: string | null;
-  setCheckItem: ((value: string[] | null) => void) | null;
+  setGanhador: React.Dispatch<React.SetStateAction<boolean>>;
+  setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>;
+  setCheckItem: React.Dispatch<React.SetStateAction<string[] | null>>;
   idUserAtual: string;
 
 };

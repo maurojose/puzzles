@@ -7,7 +7,7 @@ import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
-const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: any) => {
+const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) => {
   setPecasCarregando(true);
   let fetchNumPecas = await estoqueData(idUserAtual);
   let nPecas = fetchNumPecas.length;
@@ -23,15 +23,20 @@ async function handleDelete(
     id: string;
     url: string;
 }[]>>,
-  setlistaEstoqueLoad: (arg0: any) => void,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>,
   dataLoad: {
     id: string;
     url: string;
 }[],
-  setIdMudanca: (arg0: any) => void,
-  idUserAtual: any) {
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+  idUserAtual: string) {
   //setLoadSwap(true);
   //setEstoqueCarregando(true);
+  console.log('delete: dataload -', dataLoad ); 
   const dataLoadFind = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   setIdMudanca(idClicado);
 
@@ -43,7 +48,11 @@ async function handleDelete(
   } else {
     console.log("Item não encontrado");
   }
-  const getListaEstoque = await estoqueData(idUserAtual);
+  const getListaEstoque: Array<{
+    id: string;
+    qtd: string;
+    url: string;
+  }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
 }
 
@@ -73,7 +82,11 @@ async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: R
   // Atualize o saldo na interface após a compra
   setSaldo(saldo);
   setSaldoCarregando(false);
-  const getListaEstoque = await estoqueData(idUserAtual);
+  const getListaEstoque: Array<{
+    id: string;
+    qtd: string;
+    url: string;
+  }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   setEstoqueCarregando(false);
 }
@@ -87,20 +100,24 @@ async function handleSwap(
 }[]>>,
   imgsEstoque: string,
   imgsEstoqueId: string,
-  setlistaEstoqueLoad: (arg0: any) => void,
-  setEstoqueCarregando: (arg0: boolean) => void,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{
+    id: string;
+    qtd: string;
+    url: string;
+}[]>>,
+  setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
   dataLoad: {
     id: string;
     url: string;
 }[],
-  setIdMudanca: (arg0: any) => void,
-  setCheckItem: (arg0: any) => void,
-  checkItem: any,
+  setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
+  setCheckItem: React.Dispatch<React.SetStateAction<string[] | null>>,
+  checkItem: string[] | null,
   setidClicado: React.Dispatch<React.SetStateAction<string>>,
-  setSaldo: (arg0: any) => void,
-  setGanhador: (arg0: boolean) => void,
-  setIdGanhador: (arg0: string) => void,
-  idUserAtual: any)
+  setSaldo: React.Dispatch<React.SetStateAction<string>>,
+  setGanhador: React.Dispatch<React.SetStateAction<boolean>>,
+  setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
+  idUserAtual: string)
   
   {
   setEstoqueCarregando(true);
@@ -149,6 +166,7 @@ async function handleSwap(
     const newIdString = newId.toString();
     setidClicado(newIdString);
     setEstoqueCarregando(false);
+    if(arrayCheck !== null){
     arrayCheck.push(idClicado);
     setCheckItem(arrayCheck);
     console.log("quadrinho certo:", arrayCheck);
@@ -179,9 +197,15 @@ async function handleSwap(
   } else {
     setEstoqueCarregando(false);
   }
-  const getListaEstoque = await estoqueData(idUserAtual);
+  const getListaEstoque: Array<{
+    id: string;
+    qtd: string;
+    url: string;
+  }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   //setLoadSwap(false);
+
+}
 }
 
 
@@ -237,11 +261,9 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
         setidClicado={setidClicado}
         idMudanca={idMudanca}
         setIdMudanca={setIdMudanca}
-        pecas={Pecas}
         isOpen={abreModal}
         setModalAberto={() => setAbreModal(!abreModal)}
         listaEstoque={listaEstoqueLoad}
-        handleSwap={handleSwap}
         handleDelete={handleDelete}
         setlistaEstoqueLoad={setlistaEstoqueLoad}
         setDataLoad={setDataLoad}
