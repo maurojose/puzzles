@@ -8,7 +8,7 @@ export const GET = async (req: Request, res: NextResponse) => {
     const id = parts[0];
     console.log(id);
     await main();
-    const jogosget = await prisma.jogos.findMany({ where: { id } });
+    const jogosget = await prisma.jogos.findFirst({ where: { id } });
     console.log(jogosget);
     return NextResponse.json(jogosget, { status: 200 });
   } catch (err) {

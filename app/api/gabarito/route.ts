@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { main } from "../main";
 
 export const GET = async (req: Request, res: NextResponse) => {
+  
   try {
     await main();
     const gabaritoget = await prisma.gabarito.findMany();

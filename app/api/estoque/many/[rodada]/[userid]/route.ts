@@ -21,6 +21,7 @@ import { main } from "@/app/api/main";
 
   export const POST = async (req: Request, res: NextResponse) => {
     try {
+
       const parts = req.url.split("/estoque/many/")[1].split("/");
       const rodada = parts[0];
       const userid = parts[1];

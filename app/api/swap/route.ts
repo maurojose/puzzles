@@ -1,38 +1,86 @@
 import { NextResponse } from "next/server";
 
+// jogostatus: tabela que tem as peças que a pessoa já organizou. Ele alimenta o quadro principal.
+// estoque: tabela onde estão todas as peças que o usuário tem, nao organizadas. Ele alimenta o modal.
+// gabarito é a tabela da resposta certa
+// jogos: tabela onde se organiza as rodadas de jogo
+
 export const POST = async (req: Request, res: NextResponse) => {
   try {
-    const { rodada, userid, idClicado, imgEstoqueUrl, imgsEstoqueId } = await req.json();
 
-    const resposta1 = { rodada, userid, idClicado, imgEstoqueUrl, imgsEstoqueId }; // Teste 1
-    console.log(resposta1); // Teste 1 resposta
+    interface DadosReq {
+      rodada: string;
+      userid: string;
+      idClicado: string;
+      imgEstoqueUrl: string;
+      imgsEstoqueId: string;
+    }
+
+    type EstoqueData = {
+      idunico: string;
+      id: string;
+      qtd: string;
+      rodada: string;
+      userid: string;
+      url: string;
+      data: string;
+    };
+
+    type GameStatusData = {
+      idunico: string;
+      id: string;
+      url: string;
+      rodada: string;
+      userid: string;
+    };
+
+    type GabaritoData = {
+      idunico: string;
+      id: string;
+      rodada: string;
+      url: string;
+    };
+
+    type JogosData = {
+      id: string;
+      premio: number;
+      datacomeco: Date;
+      datafim: Date | null;
+      ganhador: string | null;
+      participantes: number | null;
+      arrecadacao: number | null;
+      preco: number;
+    };
+
+    type DadosUser = {
+      id: string;
+      saldo: string | null;
+      };
+
+    const { rodada, userid, idClicado, imgEstoqueUrl, imgsEstoqueId }: DadosReq = await req.json();
+
+    // Verifica na tabela "jogostatus" se já existe um item com id igual ao id da peça clicada
+    const fetchStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
+    const jsonStatus: GameStatusData[] = await fetchStatus.json();
+    const findIDStatus = jsonStatus.find((item: { id: string; }) => item.id === idClicado);
 
     // Pega a URL do quadrinho clicado no modal
     const urlStatus = imgEstoqueUrl;
-    console.log(urlStatus);
-
-    // Verifica na tabela "status" se já existe um item com id igual ao id da peça clicada
-    const fetchStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
-    const jsonStatus = await fetchStatus.json();
-    const findIDStatus = jsonStatus.find((item: { id: string; }) => item.id === idClicado);
-    console.log("find id status:", findIDStatus);
-
     const requestStatus = { id: idClicado, url: urlStatus };
-
+    
+    // verifica se já existe correspondência de idClicado na tabela Status
     if (findIDStatus) {
-      // Se já existe correspondência de idClicado na tabela Status, faz PUT na tabela Status com novo URL
-      const fetchItemStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
-      const jsonItemStatus = await fetchItemStatus.json();
-      const findItemStatus = jsonItemStatus.find((item: { id: any; }) => item.id === idClicado);
-      const findUrlItem = findItemStatus.url;
 
+      //readiciona 1 no quadrinho que ta devolvendo pro estoque
+      const findUrlItem = findIDStatus?.url;
       const fetchQtd = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
-      const qtdJson = await fetchQtd.json();
-      const findQtd = qtdJson.find((item: { url: any; }) => item.url === findUrlItem);
-      const quantidade = parseInt(findQtd.qtd, 10);
+      const qtdJson: EstoqueData[] = await fetchQtd.json();
+      const findQtd = qtdJson.find((item: { url: string; }) => item.url === findUrlItem);
+      const defineQtd = findQtd?.qtd || "0";
+      const quantidade = parseInt(defineQtd, 10);
       const intQtd = quantidade + 1;
       const qtd = intQtd.toString();
-      const id = findQtd.id;
+      const id = findQtd?.id;
       const requestPutQtd = { id, qtd };
       const putQtd = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`, {
         method: "PUT",
@@ -54,7 +102,7 @@ export const POST = async (req: Request, res: NextResponse) => {
           "Content-Type": "application/json"
         }
       });
-      console.log("já tinha correspondência", putStatus);
+      console.log("já tinha correspondência");
     } else {
       // Caso contrário, faz um POST na tabela Status com novos id e URL
       const postStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`, {
@@ -64,14 +112,15 @@ export const POST = async (req: Request, res: NextResponse) => {
           "Content-Type": "application/json"
         }
       });
-      console.log("não tinha correspondência", postStatus, requestStatus);
+      console.log("não tinha correspondência");
     }
 
     // Depois subtrai 1 no campo qtd da tabela estoque no item = imgsEstoqueId (id do quadrinho clicado no modal)
     const fetchQtd2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${rodada}/${userid}`);
-    const qtdJson2 = await fetchQtd2.json();
-    const findQtd2 = qtdJson2.find((item: { id: any; }) => item.id === imgsEstoqueId);
-    const quantidade2 = parseInt(findQtd2.qtd, 10);
+    const qtdJson2: EstoqueData[] = await fetchQtd2.json();
+    const findQtd2 = qtdJson2.find((item: { id: string; }) => item.id === imgsEstoqueId);
+    const defineQtd2 = findQtd2?.qtd || "0";
+    const quantidade2 = parseInt(defineQtd2, 10);
     const intQtd2 = quantidade2 - 1;
     const qtd2 = intQtd2.toString();
     const id2 = imgsEstoqueId;
@@ -91,38 +140,37 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     // Verifica se o novo status bate com o gabarito e decide se o usuário é o ganhador ou não
     const fetchGabarito = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabarito/${rodada}`);
-    const jsonGabarito = await fetchGabarito.json();
+    const jsonGabarito: GabaritoData[] = await fetchGabarito.json();
     const numGabarito = jsonGabarito.length;
     const fetchNovoStatus = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${rodada}/${userid}`);
-    const novoStatus = await fetchNovoStatus.json();
+    const novoStatus: GameStatusData[] = await fetchNovoStatus.json();
     const numNovoStatus = novoStatus.length;
     console.log("qtd gabarito", numGabarito);
     console.log("novo status", novoStatus);
     console.log("qtd novo status:", numNovoStatus);
 
     const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos/${rodada}`);
-    const jogoData = await fetchJogos.json();
+    const jogoData: JogosData = await fetchJogos.json();
+    console.log("jogoData:", jogoData);
     const ganhadorAtual = jogoData.ganhador;
     console.log("valor do ganhador", ganhadorAtual);
 
     let isGanhador = "0";
 
-    if (ganhadorAtual !== undefined && ganhadorAtual !== userid) {
+    if (ganhadorAtual != null && ganhadorAtual !== userid) {
       // Se já existe ganhador registrado e não é o usuário, ele não é o ganhador
       console.log("é ganhador?", isGanhador);
     } else {
       // Mas se não existe, vejamos se o usuário pode ser
-
+      console.log("ganhador nao existe");
       let resultado = 0;
 
-      if (numGabarito !== numNovoStatus) {
-        console.log("não é, porque gabarito != novos status", isGanhador);
-      } else {
+      if (numGabarito === numNovoStatus) {
         for (let i = 0; i < numGabarito; i++) {
-          const verItemGabarito = jsonGabarito.find((item: { id: number; }) => item.id === i);
+          const verItemGabarito = jsonGabarito.find((item: { id: string; }) => item.id === `${i}`);
           const verUrlItemGabarito = verItemGabarito?.url;
 
-          const verItemStatus = novoStatus.find((item: { id: number; }) => item.id === i);
+          const verItemStatus = novoStatus.find((item: { id: string; }) => item.id === `${i}`);
           const verUrlItemStatus = verItemStatus?.url;
 
           if (verUrlItemGabarito === verUrlItemStatus) {
@@ -145,16 +193,17 @@ export const POST = async (req: Request, res: NextResponse) => {
         isGanhador = "1";
 
         const fetchPremio = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
-        const premioJson = await fetchPremio.json();
-        const findPremio = premioJson.find((objeto: { id: any; }) => objeto.id === rodada);
-        const premioAtual =  findPremio.premio;
+        const premioJson: JogosData[] = await fetchPremio.json();
+        const findPremio = premioJson.find((objeto: { id: string; }) => objeto.id === rodada);
+        const premioAtual =  findPremio?.premio || 0;
 
         console.log("premio atual é:", premioAtual);
 
         const fetchSaldoUser = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userid}`);
-        const saldoUserJson = await fetchSaldoUser.json();
-        const findUser = saldoUserJson.find((objeto: { id: any; }) => objeto.id === userid);
-        const saldoUser =  parseInt(findUser.saldo,10);
+        const saldoUserJson: DadosUser[] = await fetchSaldoUser.json();
+        const findUser = saldoUserJson.find((objeto: { id: string; }) => objeto.id === userid);
+        const saldostring = findUser?.saldo || "0";
+        const saldoUser =  parseInt(saldostring,10);
 
         console.log("saldo atual do usuario é:", saldoUser);
 

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { main } from "../../main";
 
 export const GET = async (req: Request, res: NextResponse) => {
+  
   try {
     const parts = req.url.split("/gabarito/")[1].split("/");
     const rodada = parts[0];
