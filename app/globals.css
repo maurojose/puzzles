@@ -152,3 +152,9 @@ body {
 .fechaquadrinhonull{
   display: none;
 }
+.navbar{
+  z-index: 9999;
+}
+.navwrapper{
+  min-height: 56px;
+}
