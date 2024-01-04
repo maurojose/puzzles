@@ -71,6 +71,10 @@ const Navbar = () => {
     setShowMenu(!showMenu);
   };
 
+  const hideMenu = () => {
+    setShowMenu(false);
+  };
+
   return (
     <div className="navbar w-full bg-emerald-800 sticky top-0 flex items-center">
       <div className={`navwrapper flex w-full px-4 mx-auto ${showMenu ? "flex-col md:flex m-5 md:m-0":"justify-between items-center"}`}>
@@ -89,21 +93,21 @@ const Navbar = () => {
         </div>
         <ul className={`md:flex md:h-14 md:items-center md:space-x-4 text-center ${showMenu ? "flex flex-col mt-5 md:mt-0 md:flex-row" : "hidden"}`}>
           <li className="h-10 flex items-center justify-center">
-            <Link href="/dashboard">Jogo</Link>
+            <Link href="/dashboard" onClick={hideMenu}>Jogo</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
-            <Link href="#">Ranking</Link>
+            <Link href="#" onClick={hideMenu}>Ranking</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
-            <Link href="#">Carteira</Link>
+            <Link href="#" onClick={hideMenu}>Carteira</Link>
           </li>
           {!session ? (
             <>
               <li className="h-10 flex items-center justify-center">
-                <Link href="/register">Registre-se</Link>
+                <Link href="/register" onClick={hideMenu}>Registre-se</Link>
               </li>
               <li className="h-10 flex items-center justify-center">
-                <Link href="/login">
+                <Link href="/login" onClick={hideMenu}>
                   <button className="p-2 px-5 bg-blue-800 rounded-full">Login</button>
                 </Link>
               </li>
@@ -113,6 +117,7 @@ const Navbar = () => {
               <button
                 onClick={() => {
                   signOut();
+                  hideMenu();
                 }}
                 className="p-2 px-5 bg-blue-800 rounded-full"
               >
