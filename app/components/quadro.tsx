@@ -7,6 +7,7 @@ import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
 import Icon from '@mdi/react';
 import { mdiWalletOutline } from '@mdi/js';
+import { mdiImageOutline } from '@mdi/js';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
 const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) => {
@@ -341,11 +342,24 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             />
           </div>
           <div className='compras flex flex-wrap justify-center mt-5'>
+            <div className='status flex flex-wrap w-full justify-center px-3 py-1'>
           {saldoCarregando || saldo === null ? (
-               <p className='saldo flex justify-end text-right items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> carregando</p>
+               <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> carregando</p>
             ) : (
-              <p className='saldo flex justify-end text-right items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> R$ {saldo}</p>
+              <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> R$ {saldo}</p>
             )}
+
+            <p className='mx-3'>|</p>
+
+<div className='contadorpecas flex'>
+            {PecasCarregando || Pecas === null ? (
+              <h1>Carregando</h1>
+            ) : (
+              <h1 className='flex gap-2'> <Icon path={mdiImageOutline} size={1} /> {Pecas}/66</h1>
+            )}
+            </div>
+            </div>
+
             <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual)}>
                 <div className='flex mt-5 mb-3 justify-between'>
                 <div className='flex justify-start items-center'>

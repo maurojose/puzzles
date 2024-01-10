@@ -27,13 +27,7 @@ body {
   align-items: center;
 }
 .contadorpecas{
-  width: 360px;
-  height: 80px;
   color: #FFF;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-weight: 800;
 }
 .quadrinhos{
@@ -196,4 +190,9 @@ h3{
 .total{
   border-left: #106C4B solid 2px;
   text-align: right;
+}
+
+.status{
+  background: #167D58;
+  border-radius: 0.5rem;
 }
