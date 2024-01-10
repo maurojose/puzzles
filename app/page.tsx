@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center p-24">
       <h1>bem vindo</h1>
       <div className="container mx-10">
         <p>Este jogo está nas primeiras fases de desenvolvimento. É um jogo simples, com um único objetivo: seja o primeiro a completar o quebra-cabeça. Esse jogo tem o seguinte funcionamento:<br/>
