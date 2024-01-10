@@ -2,29 +2,6 @@ import { url } from 'inspector';
 import Image from 'next/image';
 import React, { useState, useEffect, CSSProperties } from 'react'
 
-
-const BACKGROUND_STYLE: React.CSSProperties = {
-  position: 'fixed',
-  top: '0',
-  bottom: '0',
-  left: '0',
-  right: '0',
-  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  zIndex: 1000,
-};
-
-const MODAL_STYLE: React.CSSProperties = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  backgroundColor: '#fff',
-  borderRadius: '10px',
-  color: 'black',
-  maxHeight: '80vh', // Defina a altura máxima como 80% da altura da janela
-  overflowY: 'auto',
-};
-
 type ModalquadrinhoProps = {
 
   isOpen: boolean;
@@ -165,7 +142,7 @@ export default function Modalquadrinho({
                               alt='#'
                               style={{ cursor: 'pointer' }}
                             />
-                            <p className='text-center'>({imgsEstoque.qtd})</p>
+                            <p className='text-center' title="número de peças repetidas">({imgsEstoque.qtd} un.)</p>
                           </li>
                         ))}
                     </ul>

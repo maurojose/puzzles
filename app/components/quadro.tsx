@@ -355,7 +355,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             {PecasCarregando || Pecas === null ? (
               <h1>Carregando</h1>
             ) : (
-              <h1 className='flex gap-2'> <Icon path={mdiImageOutline} size={1} /> {Pecas}/66</h1>
+              <h1 className='flex gap-2' title='Número de peças únicas, sem contar as repetidas'> <Icon path={mdiImageOutline} size={1} /> Peças únicas: {Pecas}/66</h1>
             )}
             </div>
             </div>
@@ -370,6 +370,9 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
                 <h3 className='total ml-3 pl-6'>Total: R$ {calculateTotal()}</h3>
                 </div>
               <div className='botao-fundo mt-2'><button disabled={saldoCarregando || saldo === '0'} className='botao' type="submit">COMPRAR PEÇAS</button></div>
+              <div className='flex mt-2 justify-center items-center'>
+                  <p>As peças compradas são aleatórias e as vezes será uma peça que você já tem.</p>
+                </div>
             </form>
           </div>
         </div>
