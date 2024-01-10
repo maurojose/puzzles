@@ -46,8 +46,8 @@ const Trocas = async () => {
                               alt='#'
                               style={{ cursor: 'pointer' }}
                             />
-                            <input type="number" min={0} max={imgsEstoque.qtd} name="qtd" defaultValue={0}/>
-                            <p className='text-center' title="máximo disponível"> máx.: ({imgsEstoque.qtd})</p>
+                            <input type="number" min={0} max={imgsEstoque.qtd} name="qtd" defaultValue={0} className="w-full" value={qtdAtual} onChange="handleSelect()"/>
+                            <p className='text-center' title="máximo disponível">({imgsEstoque.qtd})</p>
                           </li>
                         ))}
                     </ul>
