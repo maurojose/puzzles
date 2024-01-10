@@ -1,7 +1,7 @@
 import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { estoqueData } from "../dashboard/functions"
+import { estoqueData } from "../functions"
 
 const Trocas = async () => {
 
