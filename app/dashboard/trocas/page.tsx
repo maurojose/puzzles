@@ -31,7 +31,7 @@ const Trocas = async () => {
 
     return (
 
-        <div>
+        <div className='quadro flex mt-10 justify-center'>
             
             <ul className='listapecas' /*className='flex flex-wrap justify-center mt-3'*/>
                       {listaEstoque
