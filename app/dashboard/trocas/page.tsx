@@ -46,7 +46,8 @@ const Trocas = async () => {
                               alt='#'
                               style={{ cursor: 'pointer' }}
                             />
-                            <p className='text-center' title="número de peças repetidas">({imgsEstoque.qtd} un.)</p>
+                            <input type="number" min={0} max={imgsEstoque.qtd} name="qtd" defaultValue={0}/>
+                            <p className='text-center' title="máximo disponível"> máx.: ({imgsEstoque.qtd})</p>
                           </li>
                         ))}
                     </ul>
