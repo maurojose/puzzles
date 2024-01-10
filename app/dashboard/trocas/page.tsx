@@ -33,7 +33,7 @@ const Trocas = async () => {
 
         <div className='quadro flex mt-10 justify-center'>
             
-            <ul className='listapecas' /*className='flex flex-wrap justify-center mt-3'*/>
+            <ul className='quadrinhos grid grid-cols-6 grid-rows-11' /*className='flex flex-wrap justify-center mt-3'*/>
                       {listaEstoque
                         .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
                         .map((imgsEstoque) => (
