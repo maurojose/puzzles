@@ -62,6 +62,9 @@ export default Navbar;*/
 import React, { useState } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import Icon from '@mdi/react';
+import { mdiMenu } from '@mdi/js';
+
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -77,8 +80,8 @@ const Navbar = () => {
 
   return (
     <div className="navbar w-full bg-emerald-800 sticky top-0 flex items-center">
-      <div className={`navwrapper flex w-full px-4 mx-auto ${showMenu ? "flex-col md:flex m-5 md:m-0":"justify-between items-center"}`}>
-        <div className="flex w-full h-full justify-between items-center bg-blue-300">
+      <div className={`navwrapper flex w-full px-4 mx-auto ${showMenu ? "flex-col md:flex m-4 md:m-0":"justify-between items-center"}`}>
+        <div className="flex w-full h-full justify-between items-center">
         <div>
           <Link href="/">
             <span>logo</span>
@@ -86,12 +89,13 @@ const Navbar = () => {
         </div>
         {/* Menu hamburguer para telas menores */}
         <div className="md:hidden flex items-center">
-          <button onClick={toggleMenu} className="h-5 w-6 bg-white">
+          <button onClick={toggleMenu} className="h-5 w-6">
+          <Icon path={mdiMenu} size={1} />            
           </button>
         </div>
         {/* Menu de navegação */}
         </div>
-        <ul className={`md:flex md:h-14 md:items-center md:space-x-4 text-center ${showMenu ? "flex flex-col mt-5 md:mt-0 md:flex-row" : "hidden"}`}>
+        <ul className={`menuitens md:flex md:h-14 md:items-center md:space-x-4 text-center ${showMenu ? "flex flex-col mt-5 md:mt-0 md:flex-row" : "hidden"}`}>
           <li className="h-10 flex items-center justify-center">
             <Link href="/dashboard" onClick={hideMenu}>Jogo</Link>
           </li>
@@ -104,25 +108,22 @@ const Navbar = () => {
           {!session ? (
             <>
               <li className="h-10 flex items-center justify-center">
-                <Link href="/register" onClick={hideMenu}>Registre-se</Link>
+                <Link href="/register" onClick={hideMenu}>Cadastro</Link>
               </li>
               <li className="h-10 flex items-center justify-center">
-                <Link href="/login" onClick={hideMenu}>
-                  <button className="p-2 px-5 bg-blue-800 rounded-full">Login</button>
-                </Link>
+                <Link href="/login" onClick={hideMenu}>Login</Link>
               </li>
             </>
           ) : (
             <li className="h-10 flex items-center justify-center">
-              <button
+              <Link href="#"
                 onClick={() => {
                   signOut();
                   hideMenu();
                 }}
-                className="p-2 px-5 bg-blue-800 rounded-full"
               >
                 Logout
-              </button>
+              </Link>
             </li>
           )}
         </ul>

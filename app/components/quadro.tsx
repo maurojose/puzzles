@@ -5,6 +5,8 @@ import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
+import Icon from '@mdi/react';
+import { mdiWalletOutline } from '@mdi/js';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
 const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) => {
@@ -275,7 +277,20 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
       />
     );
   }
-  console.log('o dataload ta aqui ó:', dataLoad); 
+  console.log('o dataload ta aqui ó:', dataLoad);
+
+    const [quantity, setQuantity] = useState(1);
+    const variaveladefinir = 1; // Substitua este valor pela variável desejada
+  
+    const handleQuantityChange = (e: { target: { value: string; }; }) => {
+      const newQuantity = parseInt(e.target.value);
+      setQuantity(newQuantity);
+    };
+  
+    const calculateTotal = () => {
+      return quantity * variaveladefinir;
+    };
+
   return (
     <>
     
@@ -289,14 +304,14 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
         </h1>
       ) : (
         <div>
-          <div className='contadorpecas mb-0 flex justify-center'>
+          {/*<div className='contadorpecas mb-0 flex justify-center'>
             {PecasCarregando || Pecas === null ? (
               <h1>Carregando saldo de peças...</h1>
             ) : (
               <h1>PEÇAS: {Pecas}/66</h1>
             )}
-          </div>
-          <div className='quadro flex justify-center'>
+            </div>*/}
+          <div className='quadro flex mt-10 justify-center'>
             <ul className='quadrinhos grid grid-cols-6 grid-rows-11'>
               {quadrinhos}
             </ul>
@@ -325,18 +340,22 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
               idUserAtual={idUserAtual}
             />
           </div>
-          <div className='compras flex flex-wrap justify-center p-4'>
-            {saldoCarregando || saldo === null ? (
-              <h2 className='saldo'>Carregando saldo...</h2>
+          <div className='compras flex flex-wrap justify-center mt-5'>
+          {saldoCarregando || saldo === null ? (
+               <p className='saldo flex justify-end text-right items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> carregando</p>
             ) : (
-              <h2 className='saldo mt-4'>Seu saldo é: R${saldo}</h2>
+              <p className='saldo flex justify-end text-right items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> R$ {saldo}</p>
             )}
-            <form className='compras_form flex flex-wrap justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual)}>
-              <label className='flex justify-center mt-5'>
-                Quantas peças quer comprar?
-                <input type="text" name="qtd" defaultValue={1} className='border-solid border mx-3 inputqtd flex text-black' />
-              </label>
-              <button disabled={saldoCarregando || saldo === '0'} className='flex botao mt-5' type="submit">COMPRAR PEÇAS</button>
+            <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual)}>
+                <div className='flex mt-5 mb-3 justify-between'>
+                <div className='flex justify-start items-center'>
+                  <h3 className='mr-3 items-center'>Quantidade:</h3>
+                <input type="number" min={1} max={10} value={quantity}
+        onChange={handleQuantityChange} name="qtd" defaultValue={1} className=' w-full inputqtd flex text-black text-center py-1' />
+                </div>
+                <h3 className='total ml-3 pl-6'>Total: R$ {calculateTotal()}</h3>
+                </div>
+              <div className='botao-fundo mt-2'><button disabled={saldoCarregando || saldo === '0'} className='botao' type="submit">COMPRAR PEÇAS</button></div>
             </form>
           </div>
         </div>
