@@ -4,8 +4,7 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: any) => {
-  const { email, password } = await request.json() as { email: string; password: string; };
-  const nome = "mauro" //só pra testar
+  const { nome, email, password } = await request.json() as { nome: string; email: string; password: string; };
   const saldo = "0" //só pra testar
 
   try {
@@ -13,14 +12,25 @@ export const POST = async (request: any) => {
 
     const existingUser = await prisma.users.findFirst({
       where: {
-        email: email // Defina a condição de pesquisa para o campo "email"
+        email: email
+      }
+
+     });
+
+     const existingName = await prisma.users.findFirst({
+      where: {
+        nome: nome 
       }
 
      });
 
     if (existingUser) {
       return new NextResponse("Email is already in use", { status: 400 });
-    }else{
+    }
+    if(existingName){
+      return new NextResponse("nome de usuário já existe", { status: 400 });
+    }
+    else{
 
     const hashedPassword = await bcrypt.hash(password, 5);
     const userspost = await prisma.users.create({ data: { nome, saldo, password: hashedPassword, email } });

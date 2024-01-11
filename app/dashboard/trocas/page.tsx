@@ -2,13 +2,12 @@ import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { estoqueData } from "../functions";
-import Image from 'next/image';
+import QuadroTrocas from "@/app/components/quadroTrocas";
 
 type ImgsEstoque = {
-    id: number;
+    id: string;
     url: string;
     qtd: string;
-    // Outros campos, se houver
   };
 
 const Trocas = async () => {
@@ -32,25 +31,7 @@ const Trocas = async () => {
     return (
 
         <div className='quadro flex mt-10 justify-center'>
-            
-            <ul className='quadrinhos grid grid-cols-6 grid-rows-11' /*className='flex flex-wrap justify-center mt-3'*/>
-                      {listaEstoque
-                        .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
-                        .map((imgsEstoque) => (
-                          <li key={imgsEstoque.id}>
-                            <Image
-                              priority={true}
-                              src={`/PuzzleCompleto/${imgsEstoque.url}`}
-                              width={60}
-                              height={60}
-                              alt='#'
-                              style={{ cursor: 'pointer' }}
-                            />
-                            <input type="number" min={0} max={imgsEstoque.qtd} name="qtd" defaultValue={0} className="w-full" value={qtdAtual} onChange="handleSelect()"/>
-                            <p className='text-center' title="máximo disponível">({imgsEstoque.qtd})</p>
-                          </li>
-                        ))}
-                    </ul>
+          <QuadroTrocas listaEstoque = {listaEstoque}/>
 
         </div>
     );

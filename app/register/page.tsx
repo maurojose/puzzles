@@ -19,13 +19,44 @@ const Register = () => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailRegex.test(email);
   };
+
+  const isValidName = async (nome: string) => {
+    const reqName = await fetch("../api/register/verificanome", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome,
+      }),
+    });
+
+    if (reqName.status === 400) {
+
+    const resName = true;
+
+    return resName;
+    }
+  }
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
+    const nome = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+
+    if (!nome || nome.length < 3){
+      setError("nome de usuário inválido");
+      return;
+    }
 
     if (!isValidEmail(email)) {
       setError("Email is invalid");
+      return;
+    }
+
+    if(await isValidName(nome)){
+      setError("nome de usuário já existe");
       return;
     }
 
@@ -41,6 +72,7 @@ const Register = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          nome,
           email,
           password,
         }),
@@ -68,6 +100,14 @@ const Register = () => {
         <div className="bg-[#212121] p-8 rounded shadow-md w-96">
           <h1 className="text-4xl text-center font-semibold mb-8">Register</h1>
           <form onSubmit={handleSubmit}>
+
+          <input
+              type="text"
+              className="w-full border border-gray-300 text-black rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
+              placeholder="Nome de usuário"
+              required
+            />
+
             <input
               type="text"
               className="w-full border border-gray-300 text-black rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
