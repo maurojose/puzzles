@@ -15,9 +15,13 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
   const [isDestinoVazio, setIsDestinoVazio] = useState(true);
   const [arraySelect, setArraySelect] = useState<Array<{ id: string; qtd: string; }>>([]);
 
-  function handleSelect(selectId: string, selectQtd: string) {
+  function handleSelect(selectId: string, selectQtd: string, maxQtd:string,) {
     const updatedArray = [...arraySelect];
     const findSelectIndex = updatedArray.findIndex((item) => item.id === selectId);
+
+    if(selectQtd > maxQtd){
+      selectQtd = maxQtd;
+    }
 
     if (findSelectIndex !== -1) {
       if (selectQtd === "0") {
@@ -38,8 +42,9 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
     e.preventDefault();
     if(arraySelect.length === 0 ){
       console.log("nenhuma peça selecionada");
-    }
+    }else{
     console.log("destino:", destino, "array:", JSON.stringify(arraySelect));
+    }
   }
 
   const handleDestinoChange = (e: { target: { value: string } }) => {
@@ -70,7 +75,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
                 name="qtd"
                 defaultValue={0}
                 className="w-full h-10 text-gray-800"
-                onChange={(e) => handleSelect(imgsEstoque.id, e.target.value)}
+                onChange={(e) => handleSelect(imgsEstoque.id, e.target.value, imgsEstoque.qtd)}
               />
               <p className='text-center' title="máximo disponível">
                 ({imgsEstoque.qtd})
