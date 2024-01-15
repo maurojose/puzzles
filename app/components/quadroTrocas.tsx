@@ -36,6 +36,9 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
 
   function sendSelected(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if(arraySelect.length === 0 ){
+      console.log("nenhuma peça selecionada");
+    }
     console.log("destino:", destino, "array:", JSON.stringify(arraySelect));
   }
 
