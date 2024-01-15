@@ -36,13 +36,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
 
   function sendSelected(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const destinoInput = e.currentTarget.querySelector('input[name="destino"]') as HTMLInputElement | null;
-
-    if (destinoInput) {
-      console.log("destino:", destinoInput.value, "array:", JSON.stringify(arraySelect));
-    } else {
-      console.log("não tem destinatário");
-    }
+    console.log("destino:", destino, "array:", JSON.stringify(arraySelect));
   }
 
   const handleDestinoChange = (e: { target: { value: string } }) => {
