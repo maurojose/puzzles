@@ -1,6 +1,7 @@
 "use client"
 import Image from 'next/image';
 import React, { useState } from "react";
+import { Troca } from '../dashboard/functions';
 
 type QuadroProps = {
   listaEstoque: Array<{
@@ -8,9 +9,10 @@ type QuadroProps = {
     qtd: string;
     url: string;
   }>;
+  idUserAtual: string;
 };
 
-const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
+const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
   const [destino, setDestino] = useState("");
   const [isDestinoVazio, setIsDestinoVazio] = useState(true);
   const [arraySelect, setArraySelect] = useState<Array<{ id: string; qtd: string; }>>([]);
@@ -38,11 +40,12 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque }) => {
     console.log("arraySelect:", updatedArray);
   }
 
-  function sendSelected(e: React.FormEvent<HTMLFormElement>) {
+  async function sendSelected(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if(arraySelect.length === 0 ){
       console.log("nenhuma peça selecionada");
     }else{
+      Troca(destino, arraySelect, idUserAtual);
     console.log("destino:", destino, "array:", JSON.stringify(arraySelect));
     }
   }

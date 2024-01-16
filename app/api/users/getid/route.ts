@@ -8,7 +8,7 @@ export const POST = async (req: Request, res: NextResponse) => {
       await main();
       const findIdUser = await prisma.users.findFirst({
         where: {
-          email: userEmail // Defina a condição de pesquisa para o campo "email"
+          email: userEmail
         }
        });
        const idUser = findIdUser?.id;

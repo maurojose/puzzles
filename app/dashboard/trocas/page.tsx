@@ -31,7 +31,7 @@ const Trocas = async () => {
     return (
 
         <div className='quadro flex mt-10 justify-center'>
-          <QuadroTrocas listaEstoque = {listaEstoque}/>
+          <QuadroTrocas listaEstoque = {listaEstoque} idUserAtual = {idUserAtual} />
 
         </div>
     );
