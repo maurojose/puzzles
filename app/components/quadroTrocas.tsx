@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image';
 import React, { useState } from "react";
-import { Troca } from '../dashboard/functions';
+import { Troca, estoqueData } from '../dashboard/functions';
 
 type QuadroProps = {
   listaEstoque: Array<{
@@ -16,6 +16,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
   const [destino, setDestino] = useState("");
   const [isDestinoVazio, setIsDestinoVazio] = useState(true);
   const [arraySelect, setArraySelect] = useState<Array<{ id: string; qtd: string; }>>([]);
+  const [estoque, setEstoque] = useState(listaEstoque);
 
   function handleSelect(selectId: string, selectQtd: string, maxQtd:string,) {
     const updatedArray = [...arraySelect];
@@ -45,8 +46,12 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
     if(arraySelect.length === 0 ){
       console.log("nenhuma peça selecionada");
     }else{
-      Troca(destino, arraySelect, idUserAtual);
+      console.log("arrayselect heeey:", arraySelect);
+      await Troca(destino, idUserAtual, arraySelect);
     console.log("destino:", destino, "array:", JSON.stringify(arraySelect));
+      const updateEstoque = await estoqueData(idUserAtual);
+      setEstoque(updateEstoque);
+      setArraySelect([]);
     }
   }
 
@@ -59,7 +64,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
   return (
     <>
       <ul className='quadrinhosTroca grid grid-cols-6 grid-rows-11'>
-        {listaEstoque
+        {estoque
           .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
           .map((imgsEstoque) => (
             <li key={imgsEstoque.id}>

@@ -6,18 +6,29 @@ import { ID_RODADA } from "@/app/constants";
 export const POST = async (req: Request, res: NextResponse) => {
   try {
     const { destino, idUserAtual, dados } = await req.json();
+
+    // Certifique-se de que o corpo da requisição contenha as informações esperadas
+    if (!destino || !idUserAtual || !dados) {
+      throw new Error("Corpo da requisição incompleto. Certifique-se de fornecer destino, idUserAtual e dados.");
+    }
+
     await main();
-    const dataToUpdate = await Promise.all(dados.map(async (item: { id: string; qtd: string; }) => item));
     
-    //acha o id do destinatario
+    // Condição para verificar se "dados" é um array antes de chamar map
+    const dataToUpdate = Array.isArray(dados) ? await Promise.all(dados.map(async (item: { id: string; qtd: string; }) => item)) : [];
+    
+    console.log("destinatario:", destino, "iduseratual:", idUserAtual, "dados:", dados);
+    console.log("datatopudate:", dataToUpdate);
+    
+    // Encontrar o id do destinatário no banco de dados
     const findIdUser = await prisma.users.findFirst({
       where: {
         nome: destino
       }
     });
     const idUser = findIdUser?.id;
-    if(!idUser){
-      throw new Error("destinatario nao existe");
+    if (!idUser) {
+      throw new Error("Destinatário não existe");
     }
 
     const fetchIdunico = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/many/${ID_RODADA}/${idUserAtual}`);
@@ -26,7 +37,7 @@ export const POST = async (req: Request, res: NextResponse) => {
     if (!fetchIdunico.ok) {
       throw new Error(`Erro ao obter dados do estoque do remetente. Status: ${fetchIdunico.status}`);
     }
-    
+
     if (!fetchIdunicoDestinatario.ok) {
       throw new Error(`Erro ao obter dados do estoque do destinatário. Status: ${fetchIdunicoDestinatario.status}`);
     }
@@ -36,43 +47,45 @@ export const POST = async (req: Request, res: NextResponse) => {
 
     // Use um loop para percorrer o array e atualizar cada item
     const updates = await Promise.all(dataToUpdate.map(async (item: { id: string; qtd: string; }) => {
-      // Encontre o item no banco de dados com base no `id` do objeto da requisição
       const existingItem = jsonIdunico.find((existingItem: { id: string; }) => existingItem.id === item.id);
       const existingItemDestinatario = jsonIdunicoDestinatario.find((existingItemDestinatario: { id: string; }) => existingItemDestinatario.id === item.id);
 
       if (!existingItem) {
         throw new Error(`Item com ID ${item.id} não encontrado no banco de dados.`);
       }
+
       const quantidadeAtual = parseInt(existingItem.qtd, 10);
       const quantidadeUpdate = parseInt(item.qtd, 10);
-      const quantidadeNova = quantidadeAtual-quantidadeUpdate;
+      const quantidadeNova = quantidadeAtual - quantidadeUpdate;
 
       // Realize a atualização do item no banco de dados
-        const updateRemetente = prisma.estoque.update({
-        data: { qtd: quantidadeNova.toString() }, // Use a quantidade do objeto da requisição
-        where: { idunico: existingItem.idunico }, // Use o idunico do item no banco de dados
+      const updateRemetente = await prisma.estoque.update({
+        data: { qtd: quantidadeNova.toString() },
+        where: { idunico: existingItem.idunico },
       });
       console.log(updateRemetente);
 
-      if (!existingItemDestinatario){
-        const estoquepostDestinatario = await prisma.estoque.create({ data: { id: item.id, qtd: item.qtd, rodada: ID_RODADA, userid: idUser, url: existingItem.url } });
+      if (!existingItemDestinatario) {
+        const estoquepostDestinatario = await prisma.estoque.create({
+          data: { id: item.id, qtd: item.qtd, rodada: ID_RODADA, userid: idUser, url: existingItem.url },
+        });
         console.log(estoquepostDestinatario);
       }
-
+      else{
       const quantidadeAtualDestinatario = parseInt(existingItemDestinatario.qtd, 10);
       const quantidadeUpdateDestinatario = parseInt(item.qtd, 10);
-      const quantidadeNovaDestinatario = quantidadeAtualDestinatario+quantidadeUpdateDestinatario;
+      const quantidadeNovaDestinatario = quantidadeAtualDestinatario + quantidadeUpdateDestinatario;
 
-      const updateDestinatario = prisma.estoque.update({
-        data: { qtd: quantidadeNovaDestinatario.toString() }, // Use a quantidade do objeto da requisição
-        where: { idunico: existingItemDestinatario.idunico }, // Use o idunico do item no banco de dados
+      const updateDestinatario = await prisma.estoque.update({
+        data: { qtd: quantidadeNovaDestinatario.toString() },
+        where: { idunico: existingItemDestinatario.idunico },
       });
       console.log(updateDestinatario);
+      }
 
       const updateRes = true;
 
       return updateRes;
-
     }));
 
     return NextResponse.json({ message: "Success", updates }, { status: 200 });

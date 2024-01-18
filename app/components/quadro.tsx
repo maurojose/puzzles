@@ -1,5 +1,5 @@
 'use client'
-
+import Image from 'next/image';
 import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
@@ -61,7 +61,17 @@ async function handleDelete(
 
 
 //aqui é o que o sistema faz quando clico em compra. Ele faz requisição pra api/compras, que volta dizendo se já existe tem vencedor, e, se nao tiver, depois da compra, qual o saldo.
-async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: React.Dispatch<React.SetStateAction<string>>, setSaldoCarregando: React.Dispatch<React.SetStateAction<boolean>>, setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{ id: string; qtd: string; url: string; }[]>>, setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) {
+async function handleCompra(
+  event: React.FormEvent<HTMLFormElement>,
+  setSaldo: React.Dispatch<React.SetStateAction<string>>,
+  setSaldoCarregando: React.Dispatch<React.SetStateAction<boolean>>,
+  setPecas: React.Dispatch<React.SetStateAction<string>>,
+  setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>,
+  setlistaEstoqueLoad: React.Dispatch<React.SetStateAction<{ id: string; qtd: string; url: string; }[]>>,
+  setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
+  setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
+  idUserAtual: string,
+  calcularSomaQtd: () => number) {
   event.preventDefault();
   const qtdElement = event.currentTarget.querySelector('input[name="qtd"]') as HTMLInputElement | null;
   if (qtdElement) {
@@ -92,6 +102,8 @@ async function handleCompra(event: React.FormEvent<HTMLFormElement>, setSaldo: R
   }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
   setEstoqueCarregando(false);
+  const soma = calcularSomaQtd();
+  setSomaestoque(soma);
 }
 }
 
@@ -120,7 +132,9 @@ async function handleSwap(
   setSaldo: React.Dispatch<React.SetStateAction<string>>,
   setGanhador: React.Dispatch<React.SetStateAction<boolean>>,
   setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
-  idUserAtual: string)
+  setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
+  idUserAtual: string,
+  calcularSomaQtd: () => number)
   
   {
 
@@ -208,6 +222,8 @@ async function handleSwap(
     url: string;
   }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
+  const soma = calcularSomaQtd();
+  setSomaestoque(soma);
   //setLoadSwap(false);
 }
 
@@ -241,6 +257,20 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
   const [checkItem, setCheckItem] = useState<Array<string> | null>(dtchck);
   const [ganhador, setGanhador] = useState(false);
   const [idganhador, setIdGanhador] = useState<string | null>(null);
+
+
+  const calcularSomaQtd = () => {
+    // Use a função reduce para somar as quantidades (qtd) de todos os elementos
+    const somaQtd = listaEstoqueLoad.reduce((total, item) => {
+      // Converte a quantidade para um número e adiciona ao total
+      return total + parseInt(item.qtd, 10);
+    }, 0); // O segundo argumento de reduce é o valor inicial do total
+  
+    return somaQtd;
+  };
+
+  const [somaestoque, setSomaestoque] = useState(calcularSomaQtd);
+  console.log("soma:", somaestoque);
 
   const handleItemClicado = (id: string) => {
     setidClicado(id);
@@ -339,6 +369,8 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
               setGanhador={setGanhador}
               setIdGanhador={setIdGanhador}
               idUserAtual={idUserAtual}
+              setSomaestoque={setSomaestoque}
+              calcularSomaQtd={calcularSomaQtd}
             />
           </div>
           <div className='compras flex flex-wrap justify-center mt-5'>
@@ -352,15 +384,13 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             <p className='mx-3'>|</p>
 
 <div className='contadorpecas flex'>
-            {PecasCarregando || Pecas === null ? (
-              <h1>Carregando</h1>
-            ) : (
-              <h1 className='flex gap-2' title='Número de peças únicas, sem contar as repetidas'> <Icon path={mdiImageOutline} size={1} /> Peças únicas: {Pecas}/66</h1>
-            )}
+            
+              <h1 className='flex gap-2' title='Número de peças únicas e repetidas'> <Icon path={mdiImageOutline} size={1} /> {Pecas}/66 - total:{somaestoque}</h1>
+            
             </div>
             </div>
 
-            <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, idUserAtual)}>
+            <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, setSomaestoque, idUserAtual, calcularSomaQtd)}>
                 <div className='flex mt-5 mb-3 justify-between'>
                 <div className='flex justify-start items-center'>
                   <h3 className='mr-3 items-center'>Quantidade:</h3>

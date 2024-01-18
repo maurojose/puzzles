@@ -59,7 +59,9 @@ type ModalquadrinhoProps = {
   setSaldo: React.Dispatch<React.SetStateAction<string>>,
   setGanhador: React.Dispatch<React.SetStateAction<boolean>>,
   setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
-  idUserAtual: string
+  setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
+  idUserAtual: string,
+  calcularSomaQtd: () => number
   ) => Promise<void>;
 
   setDataLoad: React.Dispatch<React.SetStateAction<{
@@ -86,7 +88,9 @@ type ModalquadrinhoProps = {
   setGanhador: React.Dispatch<React.SetStateAction<boolean>>;
   setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>;
   setCheckItem: React.Dispatch<React.SetStateAction<string[] | null>>;
+  setSomaestoque: React.Dispatch<React.SetStateAction<number>>;
   idUserAtual: string;
+  calcularSomaQtd: () => number;
 
 };
 
@@ -109,7 +113,9 @@ export default function Modalquadrinho({
   setSaldo,
   setGanhador,
   setIdGanhador,
-  idUserAtual }: ModalquadrinhoProps) {
+  setSomaestoque,
+  idUserAtual,
+  calcularSomaQtd }: ModalquadrinhoProps) {
   
   const buscaUrlAtual = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   let urlAtual = "0";
@@ -134,7 +140,7 @@ export default function Modalquadrinho({
                         .map((imgsEstoque) => (
                           <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || (checkItem && checkItem.includes(imgsEstoque.id)) ? 'selectEstoque' : 'null'}>
                             <Image
-                              onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, idUserAtual)}
+                              onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, setSomaestoque, idUserAtual, calcularSomaQtd)}
                               priority={true}
                               src={`/PuzzleCompleto/${imgsEstoque.url}`}
                               width={60}

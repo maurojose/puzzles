@@ -96,8 +96,11 @@ export async function verificaGanhador() {
   return resGanhador;
 }
 
-export async function Troca(destino: string, arraySelect: Array<{ id: string; qtd: string; }>, idUserAtual: idUser) {
-  const requesttroca = { destino, idUserAtual, arraySelect };
+export async function Troca(destino: string, idUserAtual: idUser, arraySelect: Array<{ id: string; qtd: string; }>) {
+  const requesttroca = { destino, idUserAtual, dados: arraySelect, };
+  console.log("requesttroca", requesttroca);
+  const body = JSON.stringify(requesttroca);
+  console.log("body", body);
   const fetchtroca = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transfer`, {
     method: "POST",
     body: JSON.stringify(requesttroca),
@@ -105,6 +108,13 @@ export async function Troca(destino: string, arraySelect: Array<{ id: string; qt
       "Content-Type": "application/json",
     },
   });
-  const respostaTroca = await fetchtroca.json();
-  return respostaTroca;
+
+  if (fetchtroca.ok) {
+    const respostaTroca = await fetchtroca.json();
+    console.log("Resposta da troca bem-sucedida:", respostaTroca);
+    return respostaTroca;
+  } else {
+    console.error("Erro na troca:", fetchtroca.status);
+    return false;
+  }
 }
