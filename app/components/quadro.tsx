@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { ID_RODADA } from '../constants';
-import { carregarSaldo, estoqueData, getData, verificaGanhador } from '../dashboard/functions';
+import { carregarSaldo, estoqueData, getData, verificaGanhador, fetchbootPecas } from '../dashboard/functions';
 import Icon from '@mdi/react';
 import { mdiWalletOutline } from '@mdi/js';
 import { mdiImageOutline } from '@mdi/js';
@@ -12,9 +12,9 @@ import { mdiImageOutline } from '@mdi/js';
 //Aqui to atualizando o numero de peças que o usuario comprou
 const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) => {
   setPecasCarregando(true);
-  let fetchNumPecas = await estoqueData(idUserAtual);
-  let nPecas = fetchNumPecas.length;
-  setPecas(nPecas);
+  let numPecas = await fetchbootPecas(idUserAtual);
+  let numPecasString = numPecas.toString();
+  setPecas(numPecasString);
   setPecasCarregando(false);
 }
 
