@@ -58,8 +58,17 @@ export async function estoqueData(idUserAtual: idUser) {
 }
 
 export const fetchbootPecas = async (idUserAtual: idUser) => {
-  const awaitBootPecas = await estoqueData(idUserAtual);
-  const bootPecas = awaitBootPecas.length;
+  const awaitEstoqueData = await estoqueData(idUserAtual);
+  const awaitGetData = await getData(idUserAtual);
+
+const contador = awaitEstoqueData.reduce((acumulador: number, estoqueItem: { id: string; qtd: string }) => {
+  if (estoqueItem.qtd === '0' && !awaitGetData.includes(estoqueItem.id)) {
+    return acumulador + 1;
+  }
+  return acumulador;
+}, 0);
+  
+  const bootPecas = awaitEstoqueData.length - contador;
   return bootPecas;
 }
 

@@ -25,7 +25,8 @@ const Dashboard = async () => {
     url: string;
 }[] = await getData(idUserAtual);
   const listaEstoque = await estoqueData(idUserAtual);
-  const bootPecas = await fetchbootPecas(idUserAtual);
+  const bootPecasNumber = await fetchbootPecas(idUserAtual);
+  const bootPecas = bootPecasNumber.toString();
   const startSaldo: string = await carregarSaldo(idUserAtual);
   const dataCheck = await checkData(idUserAtual);
   const ganhadorCheck = await verificaGanhador();
