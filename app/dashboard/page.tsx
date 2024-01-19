@@ -1,9 +1,8 @@
 import Quadro from '../components/quadro';
-import { USER_ID, ID_RODADA } from '../constants';
 import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import {getData, getGabarito, checkData, estoqueData, fetchbootPecas, carregarSaldo, verificaGanhador} from "../dashboard/functions"
+import {getData, checkData, estoqueData, fetchbootPecas, carregarSaldo, verificaGanhador} from "../dashboard/functions"
 
 const Dashboard = async () => {
 
