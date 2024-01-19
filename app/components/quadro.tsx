@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
 import { ID_RODADA } from '../constants';
@@ -269,8 +269,12 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
     return somaQtd;
   };
 
-  const [somaestoque, setSomaestoque] = useState(calcularSomaQtd);
+  const [somaestoque, setSomaestoque] = useState(() => calcularSomaQtd());;
   console.log("soma:", somaestoque);
+
+  useEffect(() => {
+    setSomaestoque(calcularSomaQtd());
+  }, [listaEstoqueLoad]);
 
   const handleItemClicado = (id: string) => {
     setidClicado(id);
