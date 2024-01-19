@@ -261,7 +261,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
   const calcularSomaQtd = () => {
     // Use a função reduce para somar as quantidades (qtd) de todos os elementos
     const somaQtd = listaEstoqueLoad.reduce((total, item) => {
-      console.log("soma da listaEstoque na funcao soma", somaQtd);
+      console.log("listaEstoque na funcao soma", listaEstoqueLoad);
       // Converte a quantidade para um número e adiciona ao total
       return total + parseInt(item.qtd, 10);
     }, 0); // O segundo argumento de reduce é o valor inicial do total
