@@ -222,8 +222,7 @@ async function handleSwap(
     url: string;
   }> = await estoqueData(idUserAtual);
   setlistaEstoqueLoad(getListaEstoque);
-  const soma = calcularSomaQtd();
-  setSomaestoque(soma);
+  setSomaestoque(calcularSomaQtd());
   //setLoadSwap(false);
 }
 
