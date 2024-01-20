@@ -62,14 +62,15 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
   };
 
   return (
-    <>
+    <div className='flex flex-col gap-6'>
+      <h2 className='text-xl text-center'>Selecione as peças que deseja enviar:</h2>
       <ul className='quadrinhosTroca grid grid-cols-6 grid-rows-11'>
         {estoque
           .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
           .map((imgsEstoque) => (
-            <li key={imgsEstoque.id}>
+            <li key={imgsEstoque.id} className=' trocasLi bg-emerald-800 text-white items-center justify-center flex flex-col'>
               <Image
-                priority={true}
+                
                 src={`/PuzzleCompleto/${imgsEstoque.url}`}
                 width={60}
                 height={60}
@@ -82,20 +83,21 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
                 max={imgsEstoque.qtd}
                 name="qtd"
                 defaultValue={0}
-                className="w-full h-10 text-gray-800"
+                className="h-10 p-2 text-gray-800 qtdTrocas mt-2"
                 onChange={(e) => handleSelect(imgsEstoque.id, e.target.value, imgsEstoque.qtd)}
               />
-              <p className='text-center' title="máximo disponível">
-                ({imgsEstoque.qtd})
+              <p className='text-center text-xs my-2' title="máximo disponível">
+                Máx.: {imgsEstoque.qtd}
               </p>
             </li>
           ))}
       </ul>
       <div>
         <form onSubmit={sendSelected}>
+          <h2 className='text-xl text-center'>Qual o username do destinatário?</h2>
           <input
             type="text"
-            className='text-gray-800'
+            className='text-gray-800 w-full mb-5 mt-2 h-14'
             name="destino"
             value={destino}
             onChange={handleDestinoChange}
@@ -105,7 +107,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual }) => {
           </button>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

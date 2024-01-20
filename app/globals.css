@@ -199,3 +199,15 @@ h3{
   background: #167D58;
   border-radius: 0.5rem;
 }
+
+.qtdTrocas{
+  width: 60px;
+  height: 30px;
+  text-align: center;
+}
+
+.trocasLi{
+  width: 72px;
+  padding-top: 8px;
+  border: solid #167D58 1px;
+}
