@@ -60,15 +60,27 @@ export async function estoqueData(idUserAtual: idUser) {
 export const fetchbootPecas = async (idUserAtual: idUser) => {
   const awaitEstoqueData = await estoqueData(idUserAtual);
   const awaitGetData = await getData(idUserAtual);
+  console.log("getData array:", awaitGetData);
+  const filteredEstoqueData = awaitEstoqueData.filter((estoqueItem: { id: string; qtd: string }) => {
+    // Exclude items with '0' quantity and whose ID is in awaitGetData
+    return (estoqueItem.qtd === '0');
+  });
+  console.log("filtered array:", filteredEstoqueData);
+  const filtrados = filteredEstoqueData.length;
 
-const contador = awaitEstoqueData.reduce((acumulador: number, estoqueItem: { id: string; qtd: string }) => {
-  if (estoqueItem.qtd === '0' && !awaitGetData.includes(estoqueItem.id)) {
-    return acumulador + 1;
-  }
-  return acumulador;
-}, 0);
-  
-  const bootPecas = awaitEstoqueData.length - contador;
+  let contador = 0;
+  const filterGetData = await Promise.all(awaitGetData.map(async (item: { id: string }) => {
+
+    const findId =  filteredEstoqueData.find((itemFilter: { id: string; }) => itemFilter.id === item.id);
+
+    if(findId){
+      contador++;
+    }
+    return contador;
+  }));
+  console.log("contador:", contador);
+  const filtermenoscontador = filtrados - contador;
+  const bootPecas = awaitEstoqueData.length - filtermenoscontador;
   return bootPecas;
 }
 

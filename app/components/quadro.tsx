@@ -312,7 +312,6 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
       />
     );
   }
-  console.log('o dataload ta aqui ó:', dataLoad);
 
     const [quantity, setQuantity] = useState(1);
     const variaveladefinir = 1; // Substitua este valor pela variável desejada
@@ -399,7 +398,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
                 <div className='flex justify-start items-center'>
                   <h3 className='mr-3 items-center'>Quantidade:</h3>
                 <input type="number" min={1} max={10} value={quantity}
-        onChange={handleQuantityChange} name="qtd" defaultValue={1} className=' w-full inputqtd flex text-black text-center py-1' />
+        onChange={handleQuantityChange} name="qtd" className=' w-full inputqtd flex text-black text-center py-1' />
                 </div>
                 <h3 className='total ml-3 pl-6'>Total: R$ {calculateTotal()}</h3>
                 </div>
