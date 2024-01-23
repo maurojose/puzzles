@@ -139,3 +139,9 @@ export async function Troca(destino: string, idUserAtual: idUser, arraySelect: A
     return false;
   }
 }
+
+export async function LoadJogos(){
+  const fetchJogos = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jogos`);
+  const listaJogos = await fetchJogos.json();
+  return listaJogos;
+}
