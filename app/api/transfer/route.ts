@@ -1,15 +1,14 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import { main } from "@/app/api/main";
-import { ID_RODADA } from "@/app/constants";
 
 export const POST = async (req: Request, res: NextResponse) => {
   try {
-    const { destino, idUserAtual, dados } = await req.json();
+    const { destino, idUserAtual, dados, ID_RODADA } = await req.json();
 
     // Certifique-se de que o corpo da requisição contenha as informações esperadas
-    if (!destino || !idUserAtual || !dados) {
-      throw new Error("Corpo da requisição incompleto. Certifique-se de fornecer destino, idUserAtual e dados.");
+    if (!destino || !idUserAtual || !dados || !ID_RODADA) {
+      throw new Error("Corpo da requisição incompleto. Certifique-se de fornecer destino, idUserAtual, dados e rodada.");
     }
 
     await main();

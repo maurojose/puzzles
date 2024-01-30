@@ -31,7 +31,8 @@ type ModalquadrinhoProps = {
     url: string;
 }[],
   setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
-  idUserAtual: string
+  idUserAtual: string,
+  ID_RODADA:string
   ) => Promise<void>;
 
   handleSwap: (
@@ -61,7 +62,8 @@ type ModalquadrinhoProps = {
   setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
   setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
   idUserAtual: string,
-  calcularSomaQtd: () => number
+  calcularSomaQtd: () => number,
+  ID_RODADA:string
   ) => Promise<void>;
 
   setDataLoad: React.Dispatch<React.SetStateAction<{
@@ -91,6 +93,7 @@ type ModalquadrinhoProps = {
   setSomaestoque: React.Dispatch<React.SetStateAction<number>>;
   idUserAtual: string;
   calcularSomaQtd: () => number;
+  ID_RODADA:string;
 
 };
 
@@ -115,7 +118,8 @@ export default function Modalquadrinho({
   setIdGanhador,
   setSomaestoque,
   idUserAtual,
-  calcularSomaQtd }: ModalquadrinhoProps) {
+  calcularSomaQtd,
+  ID_RODADA }: ModalquadrinhoProps) {
   
   const buscaUrlAtual = dataLoad.find((item: { id: string; }) => item.id === idClicado);
   let urlAtual = "0";
@@ -140,9 +144,9 @@ export default function Modalquadrinho({
                         .map((imgsEstoque) => (
                           <li key={imgsEstoque.id} className={imgsEstoque.url === urlAtual || (checkItem && checkItem.includes(imgsEstoque.id)) ? 'selectEstoque' : 'null'}>
                             <Image
-                              onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, setSomaestoque, idUserAtual, calcularSomaQtd)}
+                              onClick={() => handleSwap(idClicado, setDataLoad, imgsEstoque.url, imgsEstoque.id, setlistaEstoqueLoad, setEstoqueCarregando, dataLoad, setIdMudanca, setCheckItem, checkItem, setidClicado, setSaldo, setGanhador, setIdGanhador, setSomaestoque, idUserAtual, calcularSomaQtd, ID_RODADA)}
                               priority={true}
-                              src={`/PuzzleCompleto/${imgsEstoque.url}`}
+                              src={`/${ID_RODADA}/${imgsEstoque.url}`}
                               width={60}
                               height={60}
                               alt='#'

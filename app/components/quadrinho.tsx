@@ -52,33 +52,35 @@ type QuadrinhoProps = {
     url: string;
 }[],
   setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
-  idUserAtual: string
+  idUserAtual: string,
+  ID_RODADA:string
   ) => Promise<void>;
+  ID_RODADA:string;
 };
 
 
-const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, setIdMudanca, handleDelete, estoqueCarregando, idUserAtual }) => {
+const Quadrinho: React.FC<QuadrinhoProps> = ({ onClick, id, checkItem, data, idClicado, setDataLoad, setLoadSwap, setlistaEstoqueLoad, setEstoqueCarregando, setModalAberto, setIdMudanca, handleDelete, estoqueCarregando, idUserAtual, ID_RODADA }) => {
   const quadrinhoData = data.find(item => String(item.id) === String(id));
   const defaultImage = 'quadrovazio.png';
-  const imageUrl = quadrinhoData ? quadrinhoData.url : defaultImage;
+  const imageUrl = quadrinhoData ? `/${ID_RODADA}/${quadrinhoData.url}` : `/${defaultImage}`;
 
   // Verifica se o id está contido em checkItem
   const hasIdInCheckItem = checkItem && checkItem.includes(id);
 
   // Decide se o onClick deve ser nulo com base na presença do id em checkItem
-     const handleClick = hasIdInCheckItem ? undefined : onClick;
+  const handleClick = hasIdInCheckItem ? undefined : onClick;
 
   // Define o className com base na presença do id em checkItem
   const classNameLi = hasIdInCheckItem ? "quadrinhoCerto" : id === idClicado ? "quadrinhoselect" : "quadrinho";
   const classnameDelButton = !hasIdInCheckItem && id === idClicado && quadrinhoData && !estoqueCarregando ? "fechaquadrinho" : "fechaquadrinhonull";
+
   return (
     <li id={`${id}`} className={classNameLi} onClick={handleClick}>
-
-      <button onClick={() => handleDelete(idClicado, setDataLoad, setlistaEstoqueLoad, data, setIdMudanca, idUserAtual)}  className={classnameDelButton} >X</button>
-
-      <Image priority={true} src={`/PuzzleCompleto/${imageUrl}`} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
+      <button onClick={() => handleDelete(idClicado, setDataLoad, setlistaEstoqueLoad, data, setIdMudanca, idUserAtual, ID_RODADA)}  className={classnameDelButton} >X</button>
+      <Image priority={true} src={imageUrl} width={60} height={60} alt='empty' style={{ cursor: 'pointer' }} />
     </li>
   );
 };
+
 
 export default Quadrinho;

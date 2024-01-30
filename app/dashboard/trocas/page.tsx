@@ -1,41 +1,42 @@
-import React from "react";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { estoqueData } from "../functions";
-import QuadroTrocas from "@/app/components/quadroTrocas";
+'use client'
+import {LoadJogos} from "../functions";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-type ImgsEstoque = {
-    id: string;
-    url: string;
-    qtd: string;
-  };
+const Dashboard = () => {
 
-const Trocas = async () => {
+    const [listaJogos, setListaJogos] = useState([]);
 
-    const session = await getServerSession();
-    if (!session) {
-        redirect("/");
-    }
-    const userEmail = session.user?.email;
-    const findIdByEmail = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/getid`, {
-        method: "POST",
-        body: JSON.stringify({ userEmail }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    const idUserAtual = await findIdByEmail.json();
+    useEffect(() => {
+        const carregarListaJogos = async () => {
+          const jogos = await LoadJogos();
+          setListaJogos(jogos);
+        };
 
-    const listaEstoque: ImgsEstoque[] = await estoqueData(idUserAtual);
+        carregarListaJogos();
+  }, []);
 
+
+  const router = useRouter();
+    
+  
     return (
+        <div className="jogos_wrap flex justify-center">
+            <ul className="container mt-8 max-w-4xl flex flex-col text-black">
+                {listaJogos.map((jogo: {id: string, premio: number, datacomeco:Date, preco: number}, index: number) => (
 
-        <div className='quadro flex mt-10 justify-center'>
-          <QuadroTrocas listaEstoque = {listaEstoque} idUserAtual = {idUserAtual} />
+                    <li className="h-16 items-center flex flex-row justify-stretch px-5" key={jogo.id}>
+                        <div className="text-center w-full border-e-2 border-amber-900">Jogo #{index + 1}</div>
+                        <div className="text-center w-full border-e-2 border-amber-900">Prêmio: R${jogo.premio} </div>
+                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/trocas/jogos/?game=${jogo.id}`) }>trocar!</button></div>
 
+                    </li>
+                ))}
+            </ul>
         </div>
+
     );
 
 };
+export default Dashboard;
 
-export default Trocas;

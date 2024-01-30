@@ -23,7 +23,7 @@ const handleErrors = (response: Response, errorMessage: string) => {
 export const POST = async (req: Request, res: NextResponse) => {
   try {
     type DadosReq = {
-      rodada: string;
+      ID_RODADA: string;
       userid: string;
       valorQtd: string;
     };
@@ -60,8 +60,7 @@ export const POST = async (req: Request, res: NextResponse) => {
       data: string;
     };
 
-    const { rodada, userid, valorQtd }: DadosReq = await req.json();
-    const ID_RODADA = rodada;
+    const { ID_RODADA, userid, valorQtd }: DadosReq = await req.json();
     const USER_ID = userid;
 
     // Primeiro, acho o saldo do usuário
@@ -148,7 +147,7 @@ export const POST = async (req: Request, res: NextResponse) => {
               // URL do quadrinho aleatório
             const gabaritoUrl = `${process.env.NEXT_PUBLIC_API_URL}/gabarito`;
             const fetchUrl: GabaritoData[] = await fetchJson(gabaritoUrl);
-            const urlAtual = fetchUrl.find((item: { id: string; }) => item.id === id);
+            const urlAtual = fetchUrl.find((item: { id: string, rodada: string }) => item.id === id && item.rodada === ID_RODADA);
             const url = urlAtual?.url;
 
             // Verifica na tabela estoque se tem um objeto com a mesma ID

@@ -4,7 +4,9 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import {getData, checkData, estoqueData, fetchbootPecas, carregarSaldo, verificaGanhador} from "../functions"
 
-const Jogos = async () => {
+const Jogos = async ({params, searchParams}: any) => {
+
+  const ID_RODADA: string = searchParams.game;
 
   const session = await getServerSession();
   if (!session) {
@@ -18,20 +20,18 @@ const Jogos = async () => {
           "Content-Type": "application/json"
         }
       });
-  const idUserAtual = await findIdByEmail.json();
+  const idUserAtual: string = await findIdByEmail.json();
 
   const data: {
     id: string;
     url: string;
-}[] = await getData(idUserAtual);
-  const listaEstoque = await estoqueData(idUserAtual);
-  const bootPecasNumber = await fetchbootPecas(idUserAtual);
+}[] = await getData(idUserAtual, ID_RODADA);
+  const listaEstoque = await estoqueData(idUserAtual, ID_RODADA);
+  const bootPecasNumber = await fetchbootPecas(idUserAtual, ID_RODADA);
   const bootPecas = bootPecasNumber.toString();
   const startSaldo: string = await carregarSaldo(idUserAtual);
-  const dataCheck = await checkData(idUserAtual);
-  const ganhadorCheck = await verificaGanhador();
-  console.log(dataCheck);
-  console.log("retorno de ganhador:", ganhadorCheck);
+  const dataCheck = await checkData(idUserAtual, ID_RODADA);
+  const ganhadorCheck = await verificaGanhador(ID_RODADA);
   return (
     <div className='conteudo mb-8'>
   {ganhadorCheck.ganhador === "1" ? (
@@ -44,7 +44,7 @@ const Jogos = async () => {
       )}
     </>
   ) : (
-    <Quadro data={data} bootPecas={bootPecas} startSaldo={startSaldo} listaEstoque={listaEstoque} dtchck={dataCheck} idUserAtual={idUserAtual} />
+    <Quadro data={data} bootPecas={bootPecas} startSaldo={startSaldo} listaEstoque={listaEstoque} dtchck={dataCheck} idUserAtual={idUserAtual} ID_RODADA = {ID_RODADA} />
   )}
 </div>
   );

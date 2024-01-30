@@ -1,33 +1,36 @@
-import React from "react";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import {LoadJogos} from "./functions"
+'use client'
+import {LoadJogos} from "./functions";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-const Dashboard = async () => {
-    const session = await getServerSession();
-    if (!session) {
-      redirect("/");
-    }
-    const userEmail = session.user?.email;
-    const findIdByEmail = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/getid`, {
-          method: "POST",
-          body: JSON.stringify({userEmail}),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-    const idUserAtual = await findIdByEmail.json();
+const Dashboard = () => {
 
-    const listaJogos = await LoadJogos();
-    console.log("lista de jogos:", listaJogos);
+    const [listaJogos, setListaJogos] = useState([]);
+
+    useEffect(() => {
+        const carregarListaJogos = async () => {
+          const jogos = await LoadJogos();
+          setListaJogos(jogos);
+        };
+
+        carregarListaJogos();
+  }, []);
+
+
+  const router = useRouter();
+    
   
     return (
-        <div>
-            <ul>
-                {listaJogos.map((jogo: {id: string, premio: number, datacomeco:Date, preco: number}) => (
+        <div className="jogos_wrap flex justify-center">
+            <ul className="container mt-8 max-w-4xl flex flex-col text-black">
+                {listaJogos.map((jogo: {id: string, premio: number, datacomeco:Date, preco: number}, index: number) => (
 
-                    <li key={jogo.id}> {jogo.id}. Prêmio: {jogo.premio}, data de começo: {jogo.datacomeco.toString()}, preço da unidade: {jogo.preco}</li>
+                    <li className="h-16 items-center flex flex-row justify-stretch px-5" key={jogo.id}>
+                        <div className="text-center w-full border-e-2 border-amber-900">Jogo #{index + 1}</div>
+                        <div className="text-center w-full border-e-2 border-amber-900">Prêmio: R${jogo.premio} </div>
+                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/jogos/?game=${jogo.id}`) }>jogar!</button></div>
 
+                    </li>
                 ))}
             </ul>
         </div>
@@ -36,3 +39,4 @@ const Dashboard = async () => {
 
 };
 export default Dashboard;
+

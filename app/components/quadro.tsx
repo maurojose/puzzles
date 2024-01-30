@@ -3,16 +3,15 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import Quadrinho from './quadrinho';
 import Modalquadrinho from './modalquadrinho';
-import { ID_RODADA } from '../constants';
 import { carregarSaldo, estoqueData, getData, verificaGanhador, fetchbootPecas } from '../dashboard/functions';
 import Icon from '@mdi/react';
 import { mdiWalletOutline } from '@mdi/js';
 import { mdiImageOutline } from '@mdi/js';
 
 //Aqui to atualizando o numero de peças que o usuario comprou
-const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string) => {
+const fetchPecas = async (setPecas: React.Dispatch<React.SetStateAction<string>>, setPecasCarregando: React.Dispatch<React.SetStateAction<boolean>>, idUserAtual: string, ID_RODADA:string) => {
   setPecasCarregando(true);
-  let numPecas = await fetchbootPecas(idUserAtual);
+  let numPecas = await fetchbootPecas(idUserAtual, ID_RODADA);
   let numPecasString = numPecas.toString();
   setPecas(numPecasString);
   setPecasCarregando(false);
@@ -36,7 +35,8 @@ async function handleDelete(
     url: string;
 }[],
   setIdMudanca: React.Dispatch<React.SetStateAction<string | null>>,
-  idUserAtual: string) {
+  idUserAtual: string,
+  ID_RODADA:string) {
   //setLoadSwap(true);
   //setEstoqueCarregando(true);
   console.log('delete: dataload -', dataLoad ); 
@@ -55,7 +55,7 @@ async function handleDelete(
     id: string;
     qtd: string;
     url: string;
-  }> = await estoqueData(idUserAtual);
+  }> = await estoqueData(idUserAtual, ID_RODADA);
   setlistaEstoqueLoad(getListaEstoque);
 }
 
@@ -71,7 +71,8 @@ async function handleCompra(
   setEstoqueCarregando: React.Dispatch<React.SetStateAction<boolean>>,
   setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
   idUserAtual: string,
-  calcularSomaQtd: () => number) {
+  calcularSomaQtd: () => number,
+  ID_RODADA:string) {
   event.preventDefault();
   const qtdElement = event.currentTarget.querySelector('input[name="qtd"]') as HTMLInputElement | null;
   if (qtdElement) {
@@ -79,7 +80,7 @@ async function handleCompra(
 
   setSaldoCarregando(true);
   setEstoqueCarregando(true);
-  const requestCompra = { rodada: ID_RODADA, userid: idUserAtual, valorQtd: valorQtd };
+  const requestCompra = { ID_RODADA, userid: idUserAtual, valorQtd: valorQtd };
   const fetchCompra = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/compras`, {
     method: "POST",
     body: JSON.stringify(requestCompra),
@@ -91,7 +92,7 @@ async function handleCompra(
   const vencedor = respostaCompra.vencedor;
   const saldo = respostaCompra.saldo;
   console.log(vencedor, saldo);
-  fetchPecas(setPecas, setPecasCarregando, idUserAtual);
+  fetchPecas(setPecas, setPecasCarregando, idUserAtual, ID_RODADA);
   // Atualize o saldo na interface após a compra
   setSaldo(saldo);
   setSaldoCarregando(false);
@@ -99,7 +100,7 @@ async function handleCompra(
     id: string;
     qtd: string;
     url: string;
-  }> = await estoqueData(idUserAtual);
+  }> = await estoqueData(idUserAtual, ID_RODADA);
   setlistaEstoqueLoad(getListaEstoque);
   setEstoqueCarregando(false);
   const soma = calcularSomaQtd();
@@ -134,7 +135,8 @@ async function handleSwap(
   setIdGanhador: React.Dispatch<React.SetStateAction<string | null>>,
   setSomaestoque: React.Dispatch<React.SetStateAction<number>>,
   idUserAtual: string,
-  calcularSomaQtd: () => number)
+  calcularSomaQtd: () => number,
+  ID_RODADA:string)
   
   {
 
@@ -199,7 +201,7 @@ async function handleSwap(
     });
 
     const dataSwap = await fetchSwap.json();
-    getData(idUserAtual);
+    getData(idUserAtual, ID_RODADA);
     console.log("vc é ganhador?", dataSwap);
     if(dataSwap === "1"){
 
@@ -207,7 +209,7 @@ async function handleSwap(
       setSaldo(loadSaldo);
 
       setGanhador(true);
-      const AwaitGanhador = await verificaGanhador();
+      const AwaitGanhador = await verificaGanhador(ID_RODADA);
       const findGanhador = AwaitGanhador.ganhadorAtual;
       setIdGanhador(findGanhador);
 
@@ -220,7 +222,7 @@ async function handleSwap(
     id: string;
     qtd: string;
     url: string;
-  }> = await estoqueData(idUserAtual);
+  }> = await estoqueData(idUserAtual, ID_RODADA);
   setlistaEstoqueLoad(getListaEstoque);
   setSomaestoque(calcularSomaQtd());
   //setLoadSwap(false);
@@ -238,9 +240,10 @@ type QuadroProps = {
     qtd: string;
     url: string;
   }>;
+  ID_RODADA: string;
 };
 
-const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck, idUserAtual }) => {
+const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSaldo, dtchck, idUserAtual, ID_RODADA }) => {
 
   const [idClicado, setidClicado] = useState('');
   const [saldo, setSaldo] = useState(startSaldo); // Inicia com 0
@@ -309,6 +312,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
         estoqueCarregando={estoqueCarregando}
         setCheckItem={setCheckItem}
         idUserAtual={idUserAtual}
+        ID_RODADA={ID_RODADA}
       />
     );
   }
@@ -374,6 +378,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
               idUserAtual={idUserAtual}
               setSomaestoque={setSomaestoque}
               calcularSomaQtd={calcularSomaQtd}
+              ID_RODADA={ID_RODADA}
             />
           </div>
           <div className='compras flex flex-wrap justify-center mt-5'>
@@ -393,7 +398,7 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             </div>
             </div>
 
-            <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, setSomaestoque, idUserAtual, calcularSomaQtd)}>
+            <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, setSomaestoque, idUserAtual, calcularSomaQtd, ID_RODADA)}>
                 <div className='flex mt-5 mb-3 justify-between'>
                 <div className='flex justify-start items-center'>
                   <h3 className='mr-3 items-center'>Quantidade:</h3>

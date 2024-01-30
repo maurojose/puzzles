@@ -1,8 +1,6 @@
-import { ID_RODADA } from '../constants';
-
 type idUser = string;
 
-export async function getData(idUserAtual: idUser) {
+export async function getData(idUserAtual: idUser, ID_RODADA: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gamestatus/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
 
   if (!res.ok) {
@@ -13,7 +11,7 @@ export async function getData(idUserAtual: idUser) {
   return data;
 }
 
-export async function getGabarito() {
+export async function getGabarito(ID_RODADA: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gabarito/${ID_RODADA}`, { cache: 'no-store' });
 
   if (!res.ok) {
@@ -24,10 +22,10 @@ export async function getGabarito() {
   return gabarito;
 }
 
-export async function checkData(idUserAtual: idUser) {
+export async function checkData(idUserAtual: idUser, ID_RODADA: string) {
 
-  const reqGabarito = await getGabarito();
-  const requestData = await getData(idUserAtual);
+  const reqGabarito = await getGabarito(ID_RODADA);
+  const requestData = await getData(idUserAtual, ID_RODADA);
   let arrayCheck = [];
 
   for (const item of requestData) {
@@ -45,7 +43,7 @@ export async function checkData(idUserAtual: idUser) {
 };
 
 
-export async function estoqueData(idUserAtual: idUser) {
+export async function estoqueData(idUserAtual: idUser, ID_RODADA: string) {
   const estoquefetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/estoque/${ID_RODADA}/${idUserAtual}`, { cache: 'no-store' });
 
   if (!estoquefetch.ok) {
@@ -57,9 +55,9 @@ export async function estoqueData(idUserAtual: idUser) {
   return estoque;
 }
 
-export const fetchbootPecas = async (idUserAtual: idUser) => {
-  const awaitEstoqueData = await estoqueData(idUserAtual);
-  const awaitGetData = await getData(idUserAtual);
+export const fetchbootPecas = async (idUserAtual: idUser, ID_RODADA: string) => {
+  const awaitEstoqueData = await estoqueData(idUserAtual, ID_RODADA);
+  const awaitGetData = await getData(idUserAtual, ID_RODADA);
   console.log("getData array:", awaitGetData);
   const filteredEstoqueData = awaitEstoqueData.filter((estoqueItem: { id: string; qtd: string }) => {
     // Exclude items with '0' quantity and whose ID is in awaitGetData
@@ -94,7 +92,7 @@ export async function carregarSaldo(idUserAtual: idUser) {
   return saldoUser;
 }
 
-export async function verificaGanhador() {
+export async function verificaGanhador(ID_RODADA: string) {
 
   let ganhador = "0";
   let ganhadorAtual = "0";
@@ -117,8 +115,8 @@ export async function verificaGanhador() {
   return resGanhador;
 }
 
-export async function Troca(destino: string, idUserAtual: idUser, arraySelect: Array<{ id: string; qtd: string; }>) {
-  const requesttroca = { destino, idUserAtual, dados: arraySelect, };
+export async function Troca(destino: string, idUserAtual: idUser, arraySelect: Array<{ id: string; qtd: string; }>, ID_RODADA: string) {
+  const requesttroca = { destino, idUserAtual, dados: arraySelect, ID_RODADA };
   console.log("requesttroca", requesttroca);
   const body = JSON.stringify(requesttroca);
   console.log("body", body);
