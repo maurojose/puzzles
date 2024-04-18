@@ -26,9 +26,9 @@ const Dashboard = () => {
                 {listaJogos.map((jogo: {id: string, premio: number, datacomeco:Date, preco: number}, index: number) => (
 
                     <li className="h-16 items-center flex flex-row justify-stretch px-5" key={jogo.id}>
-                        <div className="text-center w-full border-e-2 border-amber-900">Jogo #{index + 1}</div>
-                        <div className="text-center w-full border-e-2 border-amber-900">Prêmio: R${jogo.premio} </div>
-                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/jogos/?game=${jogo.id}`) }>jogar!</button></div>
+                        <div className="text-center w-full border-e-2 border-amber-900">Game #{index + 1}</div>
+                        <div className="text-center w-full border-e-2 border-amber-900">Prize: ${jogo.premio} </div>
+                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/jogos/?game=${jogo.id}`) }>play!</button></div>
 
                     </li>
                 ))}

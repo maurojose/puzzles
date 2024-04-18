@@ -334,10 +334,10 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
     
       {ganhador ? (
         <h1>
-          temos um vencedor! {idganhador === idUserAtual ? (
-            `Você, parabéns! Seu saldo é ${saldo}`
+          We have a winner! {idganhador === idUserAtual ? (
+            `It's you, Congratulations! Now you have ${saldo} coins`
           ) : (
-            'Mas não foi você, melhor sorte da próxima vez.'
+            'Hurry, go to other game to win!'
           )}
         </h1>
       ) : (
@@ -384,9 +384,9 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
           <div className='compras flex flex-wrap justify-center mt-5'>
             <div className='status flex flex-wrap w-full justify-center px-3 py-1'>
           {saldoCarregando || saldo === null ? (
-               <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> carregando</p>
+               <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> Loading</p>
             ) : (
-              <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> R$ {saldo}</p>
+              <p className='saldo flex items-center font-bold'><Icon className='mr-2' path={mdiWalletOutline} size={1} /> ${saldo}</p>
             )}
 
             <p className='mx-3'>|</p>
@@ -401,15 +401,15 @@ const Quadro: React.FC<QuadroProps> = ({ data, bootPecas, listaEstoque, startSal
             <form className='compras_form flex justify-center' onSubmit={(event) => handleCompra(event, setSaldo, setSaldoCarregando, setPecas, setPecasCarregando, setlistaEstoqueLoad, setEstoqueCarregando, setSomaestoque, idUserAtual, calcularSomaQtd, ID_RODADA)}>
                 <div className='flex mt-5 mb-3 justify-between'>
                 <div className='flex justify-start items-center'>
-                  <h3 className='mr-3 items-center'>Quantidade:</h3>
+                  <h3 className='mr-3 items-center'>Quantity:</h3>
                 <input type="number" min={1} max={10} value={quantity}
         onChange={handleQuantityChange} name="qtd" className=' w-full inputqtd flex text-black text-center py-1' />
                 </div>
-                <h3 className='total ml-3 pl-6'>Total: R$ {calculateTotal()}</h3>
+                <h3 className='total ml-3 pl-6'>Total: ${calculateTotal()}</h3>
                 </div>
-              <div className='botao-fundo mt-2'><button disabled={saldoCarregando || saldo === '0'} className='botao' type="submit">COMPRAR PEÇAS</button></div>
+              <div className='botao-fundo mt-2'><button disabled={saldoCarregando || saldo === '0'} className='botao' type="submit">Buy pieces</button></div>
               <div className='flex mt-2 justify-center items-center'>
-                  <p>As peças compradas são aleatórias e as vezes será uma peça que você já tem.</p>
+                  <p>The pieces purchased are random and sometimes it will be a piece you already have.</p>
                 </div>
             </form>
           </div>

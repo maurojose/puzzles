@@ -37,13 +37,13 @@ const Navbar = () => {
         </div>
         <ul className={`menuitens md:flex md:h-14 md:items-center md:space-x-4 text-center ${showMenu ? "flex flex-col mt-5 md:mt-0 md:flex-row" : "hidden"}`}>
           <li className="h-10 flex items-center justify-center">
-            <Link href="/dashboard" onClick={hideMenu}>Jogos</Link>
+            <Link href="/dashboard" onClick={hideMenu}>Games</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
-            <Link href="/dashboard/trocas" onClick={hideMenu}>Trocas</Link>
+            <Link href="/dashboard/trocas" onClick={hideMenu}>Exchanges</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
-            <Link href="/carteira" onClick={hideMenu}>Carteira</Link>
+            <Link href="/carteira" onClick={hideMenu}>Wallet</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
             <Link href="#" onClick={hideMenu}>Ranking</Link>
@@ -51,7 +51,7 @@ const Navbar = () => {
           {!session ? (
             <>
               <li className="h-10 flex items-center justify-center">
-                <Link href="/register" onClick={hideMenu}>Cadastro</Link>
+                <Link href="/register" onClick={hideMenu}>Sign up</Link>
               </li>
               <li className="h-10 flex items-center justify-center">
                 <Link href="/login" onClick={hideMenu}>Login</Link>

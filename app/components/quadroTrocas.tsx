@@ -64,7 +64,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual, ID_ROD
 
   return (
     <div className='jogos_wrap flex justify-center flex-col items-center pt-10'>
-      <h2 className='text-xl text-center text-amber-950 font-extrabold'>Selecione as peças que deseja enviar:</h2>
+      <h2 className='text-xl text-center text-amber-950 font-extrabold'>Select the pieces you want to send:</h2>
       <ul className='mt-8 w-full max-w-4xl text-black sm:columns-1 md:columns-2'>
         {estoque
           .filter((imgsEstoque) => parseInt(imgsEstoque.qtd, 10) > 0)
@@ -103,7 +103,7 @@ const QuadroTrocas: React.FC<QuadroProps> = ({ listaEstoque, idUserAtual, ID_ROD
       <div  className='formTroca mt-8 w-full max-w-4xl mb-14'>
         <form onSubmit={sendSelected}>
           
-          <h2 className='text-xl text-center text-amber-950 font-extrabold mt-8 mb-4'>Qual o username do destinatário?</h2>
+          <h2 className='text-xl text-center text-amber-950 font-extrabold mt-8 mb-4'>What is the recipient's username?</h2>
           <ul className='w-full sm:columns-1 md:columns-2 '>
             <li className='h-24 w-full border-0 items-center flex flex-row justify-stretch px-5'>
           <input

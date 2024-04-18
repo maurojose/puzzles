@@ -51,11 +51,11 @@ const Creditos: React.FC<CreditosProps> = ({idUserAtual, carregaSaldo}) =>
     const [isElegivel, setisElegivel] = useState(startElegivel);
     return(
         <div className="flex flex-col justify-center items-center h-full w-full max-w-7xl">
-            <h1 className=" text-lg font-extrabold mb-4">Ganhe créditos para jogar</h1>
-            <p>você tem R${saldo} atualmente</p>
+            <h1 className=" text-lg font-extrabold mb-4">Earn coins to play</h1>
+            <p>You have {saldo} coins</p>
 
-            <div className='botao-fundo my-4'><button disabled={isElegivel === false} className='botao' type="button"  onClick={() => handleCreditos(saldo, setSaldo, idUserAtual, setisElegivel)}>COLOCAR 500 CREDITOS</button></div>
-            {saldo !=='0'?(<p>você já ganhou o máximo, volte quando tiver zero.</p>):(<p>Ganhe R$500 em creditos</p>)}
+            <div className='botao-fundo my-4'><button disabled={isElegivel === false} className='botao' type="button"  onClick={() => handleCreditos(saldo, setSaldo, idUserAtual, setisElegivel)}>Get 500 coins</button></div>
+            {saldo !=='0'?(<p>You already have the max. Come back when you run out of coins</p>):(<p>Get 500 coins</p>)}
         </div>
     );
 };
