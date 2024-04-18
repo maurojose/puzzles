@@ -38,7 +38,7 @@ const Jogos = async ({params, searchParams}: any) => {
     <>
       <h1>We have a winner, game over.</h1>
       {ganhadorCheck.ganhadorAtual === idUserAtual ? (
-        <h2>And that's you, congrats!</h2>
+        <h2>And that&apos;s you, congrats!</h2>
       ) : (
         <h2>wish you luck.</h2>
       )}

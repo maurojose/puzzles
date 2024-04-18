@@ -40,7 +40,7 @@ const Navbar = () => {
             <Link href="/dashboard" onClick={hideMenu}>Games</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
-            <Link href="/dashboard/trocas" onClick={hideMenu}>Exchanges</Link>
+            <Link href="/dashboard/trocas" onClick={hideMenu}>Transfers</Link>
           </li>
           <li className="h-10 flex items-center justify-center">
             <Link href="/carteira" onClick={hideMenu}>Wallet</Link>

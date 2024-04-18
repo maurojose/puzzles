@@ -28,7 +28,7 @@ const Dashboard = () => {
                     <li className="h-16 items-center flex flex-row justify-stretch px-5" key={jogo.id}>
                         <div className="text-center w-full border-e-2 border-amber-900">Game #{index + 1}</div>
                         {/*<div className="text-center w-full border-e-2 border-amber-900">Prêmio: R${jogo.premio} </div>*/}
-                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/trocas/jogos/?game=${jogo.id}`) }>exchange!</button></div>
+                        <div className='botao-fundo botao-fundo_jogos h-10 ms-5'><button className='botao botao_jogos h-10 items-center justify-center' type="button" onClick={() => router.push(`/dashboard/trocas/jogos/?game=${jogo.id}`) }>select game</button></div>
 
                     </li>
                 ))}
