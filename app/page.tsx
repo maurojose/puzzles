@@ -10,7 +10,8 @@ export default function Home() {
           <p>
           - O primeiro a completar o quebra-cabeça será o vencedor e ganhará o prêmio;<br/>
           - As peças podem ser compradas a partir de uma unidade. Mas o jogo te dará peças aleatórias e as vezes poderá te dar uma peça que você já tem;<br/>
-          - No futuro você poderá trocar peças com outros usuários, mas por enquanto isso nao ta funcionando.<br/>
+          - Para aumentar suas chances, você pode trocar peças com outros usuários.<br/>
+          - Para colocar créditos, vá para o menu carteira e clique no botão.<br/>
         </p>
       </div>
     </main>

@@ -134,7 +134,7 @@ export default function Modalquadrinho({
                 <div className='fecharmodal font-black' onClick={() => { setModalAberto(true); setidClicado(''); }}>x</div>
                 
               
-                  {estoqueCarregando? (<p>salvando...</p>) : (
+                  {estoqueCarregando? (<p>saving...</p>) : (
 
                     <div className='wrappecas'>
 
@@ -152,7 +152,7 @@ export default function Modalquadrinho({
                               alt='#'
                               style={{ cursor: 'pointer' }}
                             />
-                            <p className='text-center' title="número de peças repetidas">({imgsEstoque.qtd} un.)</p>
+                            <p className='text-center' title="Repeated pieces">({imgsEstoque.qtd} un.)</p>
                           </li>
                         ))}
                     </ul>

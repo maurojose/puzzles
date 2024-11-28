@@ -36,11 +36,11 @@ const Jogos = async ({params, searchParams}: any) => {
     <div className='conteudo mb-8'>
   {ganhadorCheck.ganhador === "1" ? (
     <>
-      <h1>temos um ganhador, jogo encerrado</h1>
+      <h1>We have a winner, game over.</h1>
       {ganhadorCheck.ganhadorAtual === idUserAtual ? (
-        <h2>e o ganhador é você!</h2>
+        <h2>And that&apos;s you, congrats!</h2>
       ) : (
-        <h2>mais sorte no próximo</h2>
+        <h2>wish you luck.</h2>
       )}
     </>
   ) : (
