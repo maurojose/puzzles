@@ -20,7 +20,7 @@ const handleErrors = (response: Response, errorMessage: string) => {
   return response;
 };
 
-export const POST = async (req: Request, res: NextResponse) => {
+export const POST = async (req: Request): Promise<NextResponse> => {
   try {
     type DadosReq = {
       ID_RODADA: string;
@@ -58,6 +58,12 @@ export const POST = async (req: Request, res: NextResponse) => {
       userid: string;
       url: string;
       data: string;
+    };
+
+    type RequestItem = {
+      id: string;
+      qtd: string;
+      url?: string;
     };
 
     const { ID_RODADA, userid, valorQtd }: DadosReq = await req.json();
@@ -103,8 +109,9 @@ export const POST = async (req: Request, res: NextResponse) => {
         } else {
           console.log("Não temos um ganhador");
 
-          let arrayPut = [];
-          let arrayPost = [];
+
+          let arrayPut: RequestItem[] = [];
+          let arrayPost: RequestItem[] = [];
           let arrayUnicos: string[] = [];
           
           for (let i = 1; i <= valorQtdNum; i++) {
