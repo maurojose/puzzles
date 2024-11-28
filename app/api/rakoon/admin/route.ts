@@ -33,7 +33,7 @@ export const GET = async (req: Request, res: NextResponse) => {
         where: { id: reffriend },
         data: {
           points: {
-            increment: pointsRef, // Soma pointsRef ao valor atual de points
+            increment: pointsRef,
           },
           referred:{
             increment: 1,
