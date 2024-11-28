@@ -56,7 +56,7 @@
     
   }
 
-  model rewardsRakoon{
+model rewardsRakoon{
     id            String @id @default(auto()) @map("_id") @db.ObjectId
     tghandle      String
     wallet        String
