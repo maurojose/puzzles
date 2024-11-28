@@ -55,3 +55,13 @@
     email         String?
     
   }
+
+  model rewardsRakoon{
+    id            String @id @default(auto()) @map("_id") @db.ObjectId
+    tghandle      String
+    wallet        String
+    reffriend     String
+    points        Int
+    referred      Int
+    verified      Int
+  }
